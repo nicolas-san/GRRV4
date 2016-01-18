@@ -2,6 +2,10 @@
 * refaire install.md avec explications pour composer
 * faire un package avec les vendors et/ou
 * refaire l'installer
+* maj vacances
+* finir de sortir printHedear render de la fonction printHeader de functions.php et faire des include dans les vues à la place
+* faire des htaccess en option pour certains rep (comme images)
+
 
 # Futur Ajout
 * Mise en place de la generation de pdf avancé - Partiel
