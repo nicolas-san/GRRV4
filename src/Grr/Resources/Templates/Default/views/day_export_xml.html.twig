@@ -1,0 +1,62 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+
+    {#<item>
+        <titre>conseil d administration</titre>
+        <description>25 personnes
+            Bouteille d'eau
+            avec battements fait</description>
+        <batiment>2</batiment>
+        <salle>Salle Port Royal (I et II)</salle>
+        <organisme>MSC</organisme>
+        <heuredebut>8h00</heuredebut>
+        <heurefin>18h00</heurefin>
+    </item>
+#}
+
+    {# boucle des rooms accessibles #}
+    {% for room in rooms %}
+
+        {#{{ dump(room) }}#}
+
+        {% for jour in room.jours if numDay == jour.numDay %}
+            {% set jourEnCours = jour %}
+            {% set jourInPast = jour.past %}
+
+            {#{{ dump(jour) }}#}
+
+            {#{% for tCreneau, creneau in jourEnCours.creneauxHoraire %}#}
+            {# {{ dump(loop.index0) }}#}
+            {#{{ dump(tCreneau) }}#}
+            {% for reservation in jour.reservations %}
+                {#{{ dump(reservation) }}#}
+    <item>
+        <titre>{{ reservation.who1 }}</titre>
+        <description>
+            {#{% if reservation.repeat != false %}
+                {{ reservation.repeat }}
+            {% endif %}#}
+            {{ reservation.description|raw }}
+            {% if reservation.plugins.kzdRestauration.status is defined and reservation.plugins.kzdRestauration.status %}
+                Avec demande de restauration.
+            {% endif %}
+        </description>
+        <batiment>2</batiment>
+        <salle>{{ room.name }}</salle>
+        <organisme>{{ reservation.typeName }}</organisme>
+        <heuredebut>{{ reservation.tStart|date('H:i') }}</heuredebut>
+        <heurefin>{{ reservation.tEnd|date('H:i') }}</heurefin>
+    </item>
+            {% endfor %}
+            {#{% endfor %}#}
+
+            {#  fin d'un jour #}
+        {% endfor %}
+    {% endfor %}
+
+
+</rss>
+
+
+
+
+

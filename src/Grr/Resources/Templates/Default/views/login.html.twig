@@ -1,0 +1,98 @@
+<script type="text/javascript" src="js/functions.js" ></script>
+    <div class="row">
+        <div class="col-md-12 bg-primary">
+            <div class="col-md-offset-2">
+                <div class="col-md-2">
+                    {#<a href="{{ homeLink }}">#}
+                        {# Exemple avec logo perso dans le template #}
+                        {#<img src="{% if dansRepAdmin %}../{% endif %}src/Grr/Resources/Templates/Modern/public/images/logo.png" class="pull-left img-responsive" alt="logo" width="80px" height="80px">#}
+
+                        {# logo depuis la base de donnée (configuré en admin) #}
+                        {% if nomPicture %}
+                            <img src="{{ nomPicture }}" class="pull-left img-responsive" alt="logo" width="80px" height="80px">
+                        {% endif %}
+                    {#</a>#}
+                </div>
+
+                <div class="col-md-8">
+                    <span class="bigTexte">{{ settings.title }}</span><br >
+                    <span><h4>{{ settings.company }}</h4></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-offset-2 col-md-10">
+            {{ settings.message }}
+        </div>
+    </div>
+<br />
+<div class="row">
+    {% if settings.disableLogin == 'yes' %}
+    <p>
+        <span class="avertissement">
+            {{ vocab.msg_login3 }}
+        </span>
+    </p>
+    {% endif %}
+    <form action="login.php" method='post' class="form-horizontal col-md-offset-4">
+        {% if messageWarning != false %}
+            <p><span class='avertissement'>{{ messageWarning }}</span></p>
+        {% endif %}
+        {% if authLocale %}
+            <p><span style="font-size:1.4em"><a href="./index.php">{{ vocab.authentification_CAS }}</a></span></p>
+            <p><b>{{ get_vocab.authentification_locale }}</b></p>
+        {% endif %}
+        {% if lemon %}
+            <p><span style="font-size:1.4em"><a href="./index.php">{{ vocab.authentification_lemon }}</a></span></p>
+            <p><b>{{ get_vocab.authentification_locale }}</b></p>
+        {% endif %}
+        {% if lcs %}
+            <p><span style="font-size:1.4em"><a href="{{ lcsLink }}">{{ vocab.authentification_lcs }}</a></span></p>
+            <p><b>{{ vocab.authentification_locale }}</b></p>
+        {% endif %}
+        {% if lasso %}
+            <p><span style="font-size:1.4em"><a href="./index.php">{{ vocab.authentification_lasso }}</a></span></p>
+            <p><b>{{ get_vocab.authentification_locale }}</b></p>
+        {% endif %}
+        {% if http %}
+            <p><span style="font-size:1.4em"><a href="./index.php">{{ vocab.authentification_http }}</a></span></p>
+            <p><b>{{ vocab.authentification_locale }}</b></p>
+        {% endif %}
+        <fieldset{# style="padding-top: 8px; padding-bottom: 8px; width: 40%; margin-left: auto; margin-right: auto;"#} class="form-group col-md-5">
+            {#<legend class="fontcolor3" style="font-variant: small-caps;">{{ vocab.identification }}</legend>#}
+            <label for="login">{{ vocab.login }}</label>
+                                <input type="text" id="login" name="login" class="form-control" />
+            <label for="password">
+               {{ vocab.pwd }}
+            </label>
+                   <input type="password" name="password"  class="form-control" />
+            <br/>
+        {% if url != false %}
+            <input type="hidden" name="url" value="{{ url }}" />
+        {% endif %}
+            <input type="submit" name="submit" value="{{ vocab.OK }}" class="form-control btn btn-success col-md-12" />
+        </fieldset>
+    </form>
+    <script type="text/javascript">
+        document.getElementById('login').focus();
+    </script>
+
+    <div class="col-md-12 bg-primary" style="border-top:1px black solid; text-align: center">
+        <div class="col-md-11 textBlanc">
+            <a href="javascript:history.back()">Précedent</a> -
+            {% if webmasterMail %}
+                {{ webmasterMail|raw }}
+            {% endif %}
+
+            <br />
+            <p class="small textBlanc">
+                <a style="color:#ffffff;" href="http://grr.devome.com">{{ vocab.mrbs }}</a> - {{ vocab.grr_version }} : {{ version }}
+                <br />{{ vocab.msg_login1 }}
+                <a style="color:#ffffff;" href="http://grr.devome.com">http://grr.devome.com</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+{#{{ include('footer.html.twig') }}#}
+</body>
+</html>

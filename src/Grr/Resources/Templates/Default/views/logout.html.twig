@@ -1,0 +1,37 @@
+<script type="text/javascript" src="js/functions.js" ></script>
+    <div class="row">
+        <div class="col-md-12 bg-primary">
+            <div class="col-md-offset-3">
+                <div class="col-md-2">
+                    {# todo mettre logo depuis la bdd #}
+                    <img src="{% if dansRepAdmin %}../{% endif %}src/Grr/Resources/Templates/Modern/public/images/logo_ec.png" class="pull-left img-responsive" alt="logo" width="80px" height="80px">
+                    <img src="{% if dansRepAdmin %}../{% endif %}src/Grr/Resources/Templates/Modern/public/images/mutuelle.png" class="pull-left img-responsive" alt="logo" width="80px" height="80px">
+                </div>
+
+                <div class="col-md-8">
+                    <span class="bigTexte">Centre de réservation</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-offset-2 col-md-10">
+           <h1> {{ message }}</h1>
+        </div>
+    </div>
+<br />
+    {#{% if pathLogo != false %}
+        <a href="javascript:history.back()"><img src="{{ pathLogo }}" alt="logo" /></a>
+    {% endif %}
+    <h1>{{ settings.title }}</h1>
+    <h2>{{ settings.company }}</h2>#}
+
+
+    <div class="col-md-12 bg-primary" style="border-top:1px black solid; text-align: center">
+        <div class="col-md-11 textBlanc">
+            <a href="./index.php">Retour à l'accueil</a>
+        </div>
+    </div>
+</div>
+
+{#{{ include('footer.html.twig') }}#}
+</body>
+</html>

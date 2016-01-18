@@ -1,0 +1,280 @@
+{#<div class="">
+    <div class="row rowCustomBeige">
+        <div class="col-md-10 col-md-offset-2 paddingTopBottom10px">#}
+{#<div class="col-md-2">#}
+
+<div class="selectDomaines">
+{% if siteSelection %}
+    {{ include('forms/siteFields.html.twig', siteSelection) }}
+{% endif %}
+
+                {{ include('forms/areaFields.html.twig', areaSelection) }}
+                {{ include('forms/roomFields.html.twig', roomSelection) }}
+
+    </div>
+
+</div>{# fin du div de login #}
+
+            {% for key, monthDetail in returnCalHtml['month'] %}
+                <div class="col-md-4">
+                    {% if key == 1 %}
+                        <div class="col-md-2 pull-left">
+                            <a href="{{ monthDetail.monthForThisRoomLeftMoins2 }}"><span class="orangePlusGros glyphicon glyphicon-chevron-left"></span></a>
+                            {# monthForThisRoomLeftMoins2 == mois courant -2 #}
+                            {# monthForThisRoomLeft == mois courant -1 #}
+                            {#<a href="{{ monthDetail.monthForThisRoomLeft }}"><span class="orangePlusGros glyphicon glyphicon-chevron-left"></span></a>#}
+
+                        </div>
+                    {% elseif key == 2 %}
+                        <div class="col-md-2 pull-right"><a href="{{ monthDetail.monthForThisRoomRight }}"><span class="orangePlusGros glyphicon glyphicon-chevron-right"></span></a></div>
+                    {% endif %}
+                    <table class="table-condensed calendar">
+                        {#<pre>{{ dump(monthDetail.monthForThisRoomLeft) }}</pre>#}
+
+                        <tr>
+                            <td></td>
+                            <td class="tabHeader" colspan="7" align="center">
+                                {#{{ dump(monthDetail.monthForThisRoomLeft) }}
+                                {{ dump(monthDetail.linkAllRoomsForTheMonth) }}
+                                {{ dump(monthDetail.TextAllRoomsForTheMonth) }}
+                                {{ dump(monthDetail.previousYear) }}
+                                {{ dump(monthDetail.nextYear) }}#}
+                                {#{{ dump(monthDetail.linkAllRoomsForTheMonth) }}#}
+                                <a href="{{ monthDetail.linkAllRoomsForTheMonth2 }}" >{{ monthDetail.TextAllRoomsForTheMonth }}</a>
+                            </td>
+                        </tr>
+                        {# ligne des jours de la semaine #}
+                        <tr>
+                            <td>&nbsp;</td>
+                            {% for firstDay in monthDetail.firstDays %}
+                                <td class="dayName">{{ firstDay }}</td>
+                            {% endfor %}
+                        </tr>
+                        {#{{ dump(monthDetail) }}#}
+                        {% for key2, day in monthDetail.daysOfTheMonth.dayInMonth %}
+                            <tr>
+                                <td>
+                                    {#KEY2 : {{ key2 }} <br>#}
+                                    {#<pre>
+                                        {{ dump(day) }}
+                                    </pre>#}
+                                    <a class="week" href="{{ day.linkToWeekArea }}">s{{ day.textToWeekArea }} </a>
+                                </td>
+                                {% for number in day.numbers %}
+                                    {% for keyDay, dayDetail in number  %}
+                                        {% if dayDetail[loop.index0].current %}
+                                            {% set class = "week" %}
+                                        {% else %}
+                                            {% set class = "cellcalendar" %}
+                                        {% endif %}
+                                        <td>
+                                        {#{{ loop.index0 }}#}
+                                        {#{% for temp in dayDetail  %}
+                                                {{ dump(temp.link) }}
+                                                {{ dump(temp.current) }}
+                                                {{ dump(temp.week) }}
+                                        {% endfor %}#}
+                                            {#<pre>{{ dump(dayDetail[loop.index0].link) }}</pre>
+                                            <pre>{{ dump(dayDetail[loop.index0].current) }}</pre>
+                                            <pre>{{ dump(dayDetail[loop.index0].week) }}</pre>#}
+                                            {#<pre>{{ dump(dayDetail) }}</pre>
+                                            <pre>{{ dump(dayDetail) }}</pre>#}
+
+                                            {% if dayDetail[loop.index0].link %}
+
+                                                <a class="minical {{ class }}" href="{{ dayDetail[loop.index0].link }}">
+                                                    {{ keyDay }}
+                                                </a>
+
+                                                {#{% if dayDetail[loop.index0].current %}
+                                                    CURRENT
+                                                {% endif %}#}
+
+                                            {% endif %}
+                                            {#{{ dump(number)}}#}
+                                        </td>
+                                    {% endfor %}
+                                {% endfor %}
+
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endfor %}
+
+{# fermeture des dives ouverts dans printHeader.html.twig #}
+        </div>
+{# je le laisse ici pour plus de simplicité sur le court terme, à bouger une fois refactorisé #}
+<style>
+    /*span#pickerTop div.*/
+
+  /*  span#pickerTop div.ui-datepicker-header, span#pickerTop div.ui-widget-header, span#pickerTop div.ui-corner-all, span#pickerTop div.ui-datepicker, span#pickerTop div.ui-widget, span#pickerTop div.ui-widget-content{
+        border: none !important;
+        background: none !important;
+        display: inline-block !important;
+    }
+    span#pickerTop div div.ui-datepicker-header, span#pickerTop div div.ui-widget-header, span#pickerTop div div.ui-corner-all {
+        border: none !important;
+        background: none !important;
+        display: inline-block !important;
+    }
+    span#pickerTop div div div select {
+        display: inline-block !important;
+        width: 100%;
+        height: 34px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+        -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    }
+    span#pickerTop div div div select:focus {
+        border-color: #66afe9;
+        outline: 0;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+    }*/
+
+
+</style>
+
+<form id="goTo" class="form-inline col-md-6 col-md-offset-6" method="GET" action="month_all2.php">
+    <div class="input-group col-md-12">
+        <div class="">
+            <select id="month" class="form-control col-md-4" name="month">
+                <option id="1" value="01">Jan</option>
+                <option id="2" value="02">Fév</option>
+                <option id="3" value="03">Mar</option>
+                <option id="4" value="04">Avr</option>
+                <option id="5" value="05">Mai</option>
+                <option id="6" value="06">Jun</option>
+                <option id="7" value="07">Jul</option>
+                <option id="8" value="08">Aoû</option>
+                <option id="9" value="09">Sep</option>
+                <option id="10" value="10">Oct</option>
+                <option id="11" value="11">Nov</option>
+                <option id="12" value="12">Déc</option>
+            </select>
+        </div>
+        <div class="">
+            <select id="year" class="form-control col-md-4" name="year">
+                <option id="2015" value="2015">2015</option>
+                <option id="2016" value="2016">2016</option>
+                <option id="2017" value="2017">2017</option>
+                <option id="2018" value="2018">2018</option>
+                <option id="2019" value="2019">2019</option>
+                <option id="2020" value="2020">2020</option>
+            </select>
+    </div>
+        <input type="hidden" id="day" name="day" value="1"/>
+        <input type="submit" class="btn btn-default" value="Afficher" />
+    </div>
+    <script type="application/javascript">
+        $(document).ready(function(){
+            $('select#month option#{{ monthFromSetDate }}').attr('selected','selected');
+            $('select#year option#{{ yearFromSetDate }}').attr('selected','selected');
+        });
+    </script>
+
+</form>
+
+           {# <form id="goTo" class="form-inline col-md-6 col-md-offset-6" method="GET" action="month_all2.php">
+                <div class="input-group col-md-12">
+                    {
+                    <span id="pickerTop"></span>
+
+                    <button style="vertical-align: bottom" id="" class="btn btn-default">Afficher</button>
+                </div>
+                <input type="hidden" id="day" name="day"/>
+                <input type="hidden" id="month" name="month"/>
+                <input type="hidden" id="year" name="year"/>
+
+                <script type="application/javascript">
+                    /*$('span#pickerTop div').removeClass();
+                    $('span#pickerTop div div').removeClass();*/
+
+                    /*var startDate = new Date('{{ yearFromSetDate }}', '{{ monthFromSetDate }}', 1);*/
+                    var startDate2 = new Date('{{ monthFromSetDate }}/{{ dayFromSetDate }}/{{ yearFromSetDate }}');
+                    $('#month').val({{ monthFromSetDate }});
+                    $('#year').val({{ yearFromSetDate }});
+/*                    console.log( $('#month').val());
+                    console.log( $('#year').val());
+                    $('select.ui-datepicker-month').addClass('form-control col-md-3');
+                    $('select.ui-datepicker-year').addClass('form-control col-md-3');
+                    $('div.ui-datepicker-title select.ui-datepicker-month').addClass('form-control col-md-3');
+                    $('div.ui-datepicker-title select.ui-datepicker-year').addClass('form-control col-md-3');
+                    console.log( $('div.ui-datepicker-title select.ui-datepicker-month'));
+                    $('div.ui-datepicker-title select.ui-datepicker-month').removeClass();*/
+
+
+                    $(function () {
+                        $("#pickerTop").datepicker({
+                            changeMonth: true,
+                            changeYear: true,
+                            dateFormat: "dd/mm/yy",
+                            showButtonPanel: false,
+                            minDate: startDate2,
+                            maxDate: '+3y',
+                            onChangeMonthYear: function(y, m) {
+                                /*$('span#pickerTop div').removeClass();
+                                $('span#pickerTop div div').removeClass();
+                                $('select.ui-datepicker-month').addClass('form-control col-md-3');
+                                $('select.ui-datepicker-year').addClass('form-control col-md-3');*/
+
+                                var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                                $('#month').val(m);
+                                $('#year').val(y);
+
+                            }
+                        }).datepicker("setDate", new Date());
+
+                        /*$('select.ui-datepicker-month').addClass('form-control col-md-3');
+                        $('select.ui-datepicker-year').addClass('form-control col-md-3');*/
+
+                        /*$('span#pickerTop div').removeClass();
+                        $('span#pickerTop div div').removeClass();
+                        $('select.ui-datepicker-month').addClass('form-control col-md-3');
+                        $('select.ui-datepicker-year').addClass('form-control col-md-3');*/
+
+                    });
+                    /*function updateSelected(date) {
+                        $('#day').val(date.substring(0, 2));
+                        $('#month').val(date.substring(3, 5));
+                        $('#year').val(date.substring(6, 10));
+                    }*/
+                </script>
+
+
+            </form>#}
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+{#</div>#}
+{#
+<div class="row">
+    {% if menuGaucheMonthAll2 %}
+    <div id="menuGaucheMonthAll2">
+        {% else %}
+        <div class="">
+            {% endif %}
+            <div id="menuGauche">
+                {% if siteSelection %}
+                    {{ include('forms/siteFields.html.twig', siteSelection) }}
+                {% endif %}
+                {{ include('forms/areaFields.html.twig', areaSelection) }}
+                {{ include('forms/roomFields.html.twig', roomSelection) }}
+            </div>
+        </div>
+#}

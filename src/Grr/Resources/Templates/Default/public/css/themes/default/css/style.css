@@ -1,0 +1,192 @@
+body {
+    -webkit-print-color-adjust:exact;
+}
+.nav-custom {
+    background-color: #ffffff;
+}
+div#bandeau {
+    margin-top:45px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.orange{
+    color:#ec971f !important;
+}
+.orangePlusGros {
+    color:#ec971f !important;
+    font-size: 2.5em;
+    padding: 10px;
+}
+.rowCustomBeige {
+    background-color: #dfd9c9;
+    /*padding-top:20px;*/
+}
+.titre {
+    color:#ec971f !important;
+
+    padding: 10px;
+}
+.titreTime {
+    color: hsl(0, 0%, 27%);
+    font-size: 1.5em;
+}
+.bigTexte {
+    font-size:2.5em;
+    font-family: Trebuchet MS;
+}
+.sousTitre{
+    font-family: sans-serif;
+    font-size: 1.5em;
+    font-weight: lighter;
+}
+
+.week {
+    color: hsl(30, 87%, 51%) !important;
+    font-family: "roboto";
+    text-transform: uppercase;
+    display: block;
+    height: 14px;
+    padding-bottom: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    text-decoration-line: none;
+    text-decoration-style: solid;
+    font-weight: bold;
+}
+a.week:hover {
+    color: #ffffff;
+    text-decoration-line: none;
+}
+.dayName {
+    color: hsl(0, 0%, 27%);
+    font-weight: bold;
+    text-transform: uppercase;
+}
+a.minical {
+    color: hsl(0, 0%, 27%);
+    display: block;
+    height: 14px;
+    padding-bottom: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    text-decoration-line: none;
+    text-decoration-style: solid;
+}
+.tabHeader{
+    background-attachment: scroll;
+    background-clip: border-box;
+    background-color: hsl(30, 87%, 51%);
+    background-image: none;
+    background-origin: padding-box;
+    background-position: 0 0;
+    background-repeat: repeat;
+    background-size: auto auto;
+    color: hsl(0, 0%, 100%);
+}
+.tabHeader a {
+    color: hsl(0, 0%, 100%);
+    text-decoration: none;
+    font-weight: bold;
+}
+.table td {
+    padding-bottom: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+}
+.paddingTopBottom10px {
+    padding:20px 0px;
+}
+.colLogin {
+    border-bottom: 1px #ffffff solid;
+    padding: 10px 0px;
+}
+. selectDomaines {
+
+}
+.borderRight{
+    border-right: 1px #ffffff solid;
+}
+.bgBeige {
+    background-color: hsl(45, 21%, 93%);
+}
+.cellHours1 {
+    background-color: hsl(29, 85%, 77%);
+}
+.cellHours2 {
+    background-color: hsla(199, 67%, 46%, 0.18);
+}
+#fade{display:none;background:#000;position:fixed;left:0;top:0;width:100%;height:100%;opacity:.8;z-index:9999}
+
+a.poplight {
+    display: inline !important;
+    color: #000;
+    font-weight: 400;
+    font-size: 14px;
+    height: 100%;
+    width: 100%;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: #ffffff 1px solid !important;
+}
+.popup_block{display:none;background:#fff;padding-left:20px!important;border:10px solid #ddd;float:left;font-size:1.2em;position:fixed;top:10%;left:50%;z-index:99999;-webkit-box-shadow:0 0 20px #000;-moz-box-shadow:0 0 20px #000;box-shadow:0 0 20px #000}
+img.btn_close{position:relative;z-index:5;border:0;float:right;}
+html #fade,html .popup_block{position:absolute}
+.closepop{float:right;cursor:pointer}
+
+a.linkPlus{
+    padding:5px 48%;
+}
+#footer {
+    position:relative;
+    bottom:0;
+    width:100%;
+}
+a.whiteNoUnderline, a.whiteNoUnderline:hover, a.whiteNoUnderline:visited{
+    color:#ffffff !important;
+    text-underline: none;
+}
+.creneau {
+    font-weight: bold;
+    font-size: 0.8em;
+
+}
+.paddingSides3px {
+    padding: 1px 3px !important;
+}
+form.deleteOverloadField {
+    margin:0;
+    padding: 0;
+}
+#headingBandeau {
+    text-align: center;
+}
+.glyphicon-option-horizontal {
+    font-size: 0.5em;
+    color:#c0c0c0;
+}
+a.roomTitle {
+    font-size: 1em;
+    white-space: nowrap;
+    color:#000000;
+}
+.textBlanc, .textBlanc a {
+    color:#ffffff !important;
+}
+div.resa{
+    border-bottom: 1px #ffffff solid !important;
+}
+.small_planning {
+    font-size: 0.7em;
+}
+@media print {
+   a[href]:after {
+        content: "" !important;
+    }
+}
+.ui-datepicker-calendar {
+    display: none;
+}

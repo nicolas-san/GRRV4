@@ -1,0 +1,10 @@
+{
+    "require": {
+        "twig/twig": "^1.19",
+        "twig/extensions": "^1.2",
+        "symfony/event-dispatcher": "^2.7",
+        "symfony/class-loader": "^2.7",
+        "eluceo/ical": "*",
+        "symfony/yaml": "^2.7"
+    }
+}

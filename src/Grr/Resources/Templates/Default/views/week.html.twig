@@ -1,0 +1,308 @@
+{% if pview and precedant %}
+    <span id="lienPrecedent">
+        <button class="btn btn-default btn-xs" onclick="charger();javascript:history.back();">Précedent</button>
+    </span>
+{% endif %}
+{% if roomForArea %}
+{#<div class="row">#}
+    {% if tplArrayMenuGauche %}
+        {# include de template du menu gauche #}
+        {{ include('menuGauche.html.twig', tplArrayMenuGauche) }}
+    {% endif %}
+</div>
+</div>
+</div>
+    {% if pview %}
+        <div id="print_planning">
+    {% else %}
+        <div class="container">
+            <div id="planning" class="row">
+    {% endif %}
+    {#<div class="row">#}
+                    <div id="chargement" style="display: none;">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                        </div>
+                    </div>
+                <div class="titre_planning row">
+                        {% if pview == false %}
+                            <div class="col-md-10 col-md-offset-2">
+                                <div class="col-md-2 pull-left">
+                                <button class="btn btn-link" onclick="charger();javascript: location.href='{{ linkBefore }}';">
+                                            {#<span class="glyphicon glyphicon-backward"></span>{{ vocab.weekbefore }}#}
+                                            <span class="orangePlusGros glyphicon glyphicon-chevron-left"></span>
+                                        </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4 class="titre text-capitalize text-center">{{ thisAreaName }} - {{ rooms.0.linkText }}</h4>
+                                     <h5 class="text-capitalize  text-center"> Du {{ dateStart }} au {{ dateEnd }}</h5>
+                                     <h5 class="text-center"><a href="{{ rooms.0.linkHref }}&pview=1" target="_blank"><span class="glyphicon glyphicon-zoom-in"></span></a></h5>
+                                </div>
+                                <div class="col-md-2 pull-right">
+                                <button class="btn btn-link" onclick="charger();javascript: location.href='{{ linkAfter }}';">
+                                            {#{{ vocab.weekafter }} #} <span class="orangePlusGros glyphicon glyphicon-chevron-right"></span>
+                                        </button>
+                                </div>
+                            </div>
+                            {#<table class="table-header">
+                                <tr>
+                                    <td class="left">
+                                        <button class="btn btn-default btn-xs" onclick="charger();javascript: location.href='{{ linkBefore }}';">
+                                            <span class="glyphicon glyphicon-backward"></span>{{ vocab.weekbefore }}
+                                        </button>
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td class="right">
+                                        <button class="btn btn-default btn-xs" onclick="charger();javascript: location.href='{{ linkAfter }}';">
+                                            {{ vocab.weekafter }}  <span class="glyphicon glyphicon-forward"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>#}
+                        {% endif %}
+
+                </div>
+                </div>
+                {#<div class="row">#}
+                    <div class="contenu_planning row">
+                        <table class="table-bordered table-striped col-md-12">
+                            <thead>
+                                <tr>
+                                    <th class="jour_sem"> </th>
+                                    {% for jour in jours %}
+                                        {# un tour par jour de la semaine cette boucle doit faire 7 tours #}
+                                        <th class="jour_sem">
+                                            <a class="lienPlanning {% if jour.vacances %}vacance{% endif %} {% if jour.ferie %}ferie{% endif %}" href="{{ jour.linkHref }}" title="{{ jour.linkTitle }}">{{ jour.linkText }}</a>
+                                            <br>
+                                            {% if jour.jourCycleActif %}
+                                                {% if jour.jourCycleActifFirst %} {{ vocab.rep_type_6 }} {% endif %} {{ jour.jourCycle }}
+                                            {% endif %}
+                                        </th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            {# boucle des rooms accessibles #}
+                            {% for room in rooms %}
+                                <tr>
+                                    <td>
+                                        <a  class="roomTitle" title="{% if room.description != "" %}{{ room.description }}{% endif %}{% if room.capacity > 0 %} - Capacité : {{ room.capacity }}{% endif %}" href="{{ room.linkHref }}" href="{{ room.linkHref }}">{{ room.linkText }}</a>
+                                        <br />
+                                        {%  if room.resaIndispo %}
+                                            <span class="texte_ress_tempo_indispo">{{ vocab.ressource_temporairement_indisponible }}</span>
+                                            <br />
+                                        {% endif %}
+
+                                        {% if room.accessToFiche %}
+                                            <a href="javascript:centrerpopup('view_room.php?id_room={{ room.id }}',600,480,'scrollbars=yes,statusbar=no,resizable=yes')" title="{{ vocab.fiche_ressource }}">
+                                            <span class="glyphcolor glyphicon glyphicon-search"></span></a>
+                                        {% endif %}
+
+                                        {% if room.adminAccess %}
+                                            <a href="./admin/admin_edit_room.php?room={{ room.id }}"><span class="glyphcolor glyphicon glyphicon-cog"></span></a>
+                                        {% endif %}
+                                        {% if room.afficheRessourceEmprunte != 'yes' and room.afficheRessourceEmprunte is iterable %}
+                                            {{ include('helpers/ressourceEmpruntee.html.twig', room.afficheRessourceEmprunte) }}
+                                        {% endif %}
+                                    {#</td>#}
+                                    {% for jour in room.jours %}
+                                    {# un tour de boucle par jour de le samaine pour la room en cours #}
+                                            {% if jour.empty == true %}
+                                                {% if jour.row4 %}
+                                                    <td class="empty_cell" align="center">
+                                                {% else %}
+                                                    <td class="avertissement" align="center">
+                                                {% endif %}
+                                            {% else %}
+                                                <td class="cell_month" valign="top" align="center">
+                                            {% endif %}
+
+                                                {#Jour {{ loop.index0 }} = {{ jour.index }}#}
+                                                {% for reservation in jour.reservations %}
+                                                {# un tour de boucle par résa dans le jour en cours #}
+
+                                                    {% if reservation.accessFicheResa %}
+                                                        {# on met le lien vers view_entry ou juste une popup #}
+                                                        {% if reservation.linkHref == false %}
+                                                            <a title="{{ reservation.linkTitle }}" data-width="675" onclick="{{ reservation.linkOnclick }}" data-rel="popup_name" class="poplight" style = "border-bottom:1px solid #FFF">
+                                                        {% else %}
+                                                            <a class="lienCellule" title="{{ reservation.linkTitle }}" href="{{ reservation.linkHref }}">
+                                                        {% endif %}
+                                                                {#<table class="table-header" width="100%">
+                                                                    <tr>
+                                                                        <td style="background-color: {{ reservation.color }}">#}
+                                                                        <style>
+                                            @media print{
+                                                div.{{ reservation.color|trim('#') }} {background-color:{{ reservation.color }} !important;
+                                                }}
+                                        </style>
+
+                                                                        <div class="resa {{ reservation.color|trim('#') }}" style="background-color: {{ reservation.color }}">
+
+                                                                            {% if reservation.empruntee %}
+                                                                                <img src="img_grr/buzy.png" alt="{{ vocab.ressource_actuellement_empruntee }}" title="{{ vocab.ressource_actuellement_empruntee }}" width="20" height="20" class="image" />
+                                                                            {% endif %}
+
+                                                                            {% if reservation.aConfirmerAuPlusTard != false %}
+                                                                                <img src="img_grr/small_flag.png" alt="{{ vocab.reservation_a_confirmer_au_plus_tard_le }}" title="{{ vocab.reservation_a_confirmer_au_plus_tard_le }}, {{ reservation.aConfirmerAuPlusTard }}" width="20" height="20" class="image" />
+                                                                            {% endif %}
+
+                                                                            {% if reservation.moderation %}
+                                                                                <img src="img_grr/flag_moderation.png" alt="{{ vocab.en_attente_moderation }}" title="{{ vocab.en_attente_moderation }}" class="image" />
+                                                                            {% endif %}
+
+                                                                            <span class="small_planning">
+                                                                            {{ reservation.data }}
+                                                                                {% if reservation.plugins.kzdRestauration.status is defined and reservation.plugins.kzdRestauration.status %}
+                                                                                    <br><span class="glyphicon glyphicon-cutlery"></span><br>
+                                                                                {% endif %}
+                                                                                {% if reservation.repeat != false %}
+                                                                                    <br> {{ reservation.repeat }}
+                                                                                {% endif %}
+                                                                                <br>{{ reservation.who1 }}
+                                                                                <br>
+
+                                                                                {#{% if reservation.description != false %}
+                                                                                    <i> {{ reservation.description|raw }} </i>
+                                                                                {% endif %}#}
+
+                                                                                {% if reservation.clef %}
+                                                                                    <br><img src="img_grr/skey.png" alt="clef">
+                                                                                {% endif %}
+
+                                                                                {% if reservation.courrier != false %}
+                                                                                    {% if reservation.courrier == "courrier" %}
+                                                                                        <img src="img_grr/scourrier.png" alt="courrier">
+                                                                                    {% elseif reservation.courrier == "buzy" %}
+                                                                                        <img src="img_grr/hourglass.png" alt="buzy">
+                                                                                    {% endif %}
+                                                                                {% endif %}
+                                                                            </span>
+                                                                        </div>
+                                                                        {#</td>
+                                                                    </tr>
+                                                                </table>#}
+                                                            </a>
+                                                    {% else %}
+                                                                            <div class="resa" style="background-color: {{ reservation.color }}">
+                                                                            {#<table class="table-header" width="100%">
+                                                                                <tr>
+                                                                                    <td style="background-color: {{ reservation.color }}">#}
+
+                                                                                        {% if reservation.empruntee %}
+                                                                                            <img src="img_grr/buzy.png" alt="{{ vocab.ressource_actuellement_empruntee }}" title="{{ vocab.ressource_actuellement_empruntee }}" width="20" height="20" class="image" />
+                                                                                        {% endif %}
+
+                                                                                        {% if reservation.aConfirmerAuPlusTard != false %}
+                                                                                            <img src="img_grr/small_flag.png" alt="{{ vocab.reservation_a_confirmer_au_plus_tard_le }}" title="{{ vocab.reservation_a_confirmer_au_plus_tard_le }}, {{ reservation.aConfirmerAuPlusTard }}" width="20" height="20" class="image" />
+                                                                                        {% endif %}
+
+                                                                                        {% if reservation.moderation %}
+                                                                                            <img src="img_grr/flag_moderation.png" alt="{{ vocab.en_attente_moderation }}" title="{{ vocab.en_attente_moderation }}" class="image" />
+                                                                                        {% endif %}
+
+                                                                                        <span class="small_planning">
+                                                                            {{ reservation.data }}
+                                                                                {% if reservation.plugins.kzdRestauration.status is defined and reservation.plugins.kzdRestauration.status %}
+                                                                                    <br><span class="glyphicon glyphicon-cutlery"></span><br>
+                                                                                {% endif %}
+                                                                                {% if reservation.repeat != false %}
+                                                                                    <br> {{ reservation.repeat }}
+                                                                                {% endif %}
+                                                                                <br>{{ reservation.who1 }}
+                                                                                <br>
+
+                                                                                {#{% if reservation.description != false %}
+                                                                                    <i> {{ reservation.description|raw }} </i>
+                                                                                {% endif %}#}
+
+                                                                                {% if reservation.clef %}
+                                                                                    <img src="img_grr/skey.png" alt="clef">
+                                                                                {% endif %}
+
+                                                                                {% if reservation.courrier != false %}
+                                                                                    {% if reservation.courrier == "courrier" %}
+                                                                                        <img src="img_grr/scourrier.png" alt="courrier">
+                                                                                    {% elseif reservation.courrier == "buzy" %}
+                                                                                        <img src="img_grr/hourglass.png" alt="buzy">
+                                                                                    {% endif %}
+                                                                                {% endif %}
+                                                                            </span>
+                                                                                     </div>
+                                                                                    {#</td>
+                                                                                </tr>
+                                                                            </table>#}
+                                                    {% endif %}
+                                                {% endfor %}
+
+                                            {% if jour.horsResa %}
+                                                <br><img src="img_grr/stop.png" alt="{{ vocab.reservation_impossible }}" title="{{ vocab.reservation_impossible }}" width="16" height="16" class="{% if pview %}print_image{% else %}image{% endif %}" />
+                                            {% else %}
+                                                {% if jour.editEntryLink != false and jour.past == false %}
+                                                    <a href="{{ jour.editEntryLink }}" title="{{ vocab.cliquez_pour_effectuer_une_reservation }}">
+                                                        <span class="glyphicon glyphicon-option-horizontal"></span>
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+                                            </td>
+
+                                    <script language=javascript>
+
+                                        jQuery(document).ready(function($){
+                                            $("#popup_name").draggable({containment: "#container"});
+                                                $("#popup_name").resizable(
+                                                {
+                                                    animate: true
+                                                }
+                                            );
+                                        });
+                                    </script>
+                                    {#  fin d'un jour #}
+                                    {% endfor %}
+                                    </tr>
+                            {% endfor %}
+                            </table>
+
+                        {% if pview != true %}
+                            <div id="toTop">
+                                <b>{{ vocab.top_of_page }}</b>
+                                <script type="text/javascript">
+                                    $(function(){
+                                        $(window).scroll(function(){
+                                            if ($(this).scrollTop() != 0)$("#toTop").fadeIn();
+                                            else $("#toTop").fadeOut();
+                                        });
+                                        $("#toTop").click(function(){
+                                            $("body,html").animate({scrollTop:0},800);
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {#</div>#}
+    {#</div>#}
+
+
+<div id="popup_name" class="popup_block"></div>
+
+
+{% else %}
+    <h1>{{ vocab.no_rooms_for_area }}</h1>
+{% endif %}
+<br>
+
+                        {# include footer #}
+                        {{ include('footer.html.twig') }}
+</body>
+</html>
+
+
+
+
+
+

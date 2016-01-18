@@ -1,0 +1,84 @@
+<div class="input-group clockpicker col-md-3">
+    <input name="{{ typeTime }}" type="text" class="form-control" value="{{ hour }}:{{ minute }}" id="{{ typeTime }}">
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-time"></span>
+        </span>
+</div>
+<script type="text/javascript">
+    {#
+        $('.clockpicker').clockpicker({
+    align: 'left',
+    placement: 'top',
+    //donetext: 'Valider',
+    autoclose: true,
+        afterDone: function() {
+            if ("{{ typeTime }}" == "end_") {
+                console.log("test change date ");
+                console.log($('#start_day').val()+" => "+ $('#end_day').val());
+                console.log($('#start_month').val()+" => "+ $('#end_month').val());
+                console.log($('#start_year').val()+" => "+ $('#end_year').val());
+
+                console.log($('#start_day').val() == $('#end_day').val() && $('#start_month').val() == $('#end_month').val() && $('#start_year').val() == $('#end_year').val());
+
+                if ($('#start_day').val() == $('#end_day').val() && $('#start_month').val() == $('#end_month').val() && $('#start_year').val() == $('#end_year').val()) {
+                    /!* je ne vérifie que l'heure de fin est plus grande que l'heure de début uniquement si le jour est identique
+                     * TODO gérer si c'est le même jour d'un autre mois, et/ou d'une autre année
+                     * *!/
+
+                    var start = $('#start_').val();
+                    var end = $('#end_').val();
+                    console.log($('#start_').val()+" => "+$('#end_').val());
+                    if (start >= end) {
+                        alert("L'heure de fin de réservation est invalide, elle doit être plus grande que l'heure de début");
+                    }
+                }
+            }
+        }
+    });#}
+    $('#end_, #start_').on('change', function(){
+
+        /* start */
+        var timeStartSplitted = $('#start_').val().split(':');
+        var timeStart = new Date();
+        timeStart.setHours(timeStartSplitted[0], timeStartSplitted[1]);
+
+        /* end */
+        var timeEndSplitted = $('#end_').val().split(':');
+        var timeEnd = new Date();
+        timeEnd.setHours(timeEndSplitted[0], timeEndSplitted[1]);
+
+        $('#start_').val(("0" + timeStart.getHours()).slice(-2)+':'+("0" + timeStart.getMinutes()).slice(-2));
+        $('#end_').val(("0" + timeEnd.getHours()).slice(-2)+':'+("0" + timeEnd.getMinutes()).slice(-2));
+
+        console.log(timeEnd);
+        console.log(timeStart);
+
+        if ($('#start_day').val() == $('#end_day').val() && $('#start_month').val() == $('#end_month').val() && $('#start_year').val() == $('#end_year').val()) {
+            console.log(timeEnd.getTime()+ ' - ' +timeStart.getTime());
+            if (timeEnd.getTime() < timeStart.getTime()) {
+                alert("L'heure de fin de réservation est invalide, elle doit être plus grande que l'heure de début");
+            }
+        }
+
+
+        /*console.log("test change date ");
+        console.log($('#start_day').val()+" => "+ $('#end_day').val());
+        console.log($('#start_month').val()+" => "+ $('#end_month').val());
+        console.log($('#start_year').val()+" => "+ $('#end_year').val());
+
+        console.log($('#start_day').val() == $('#end_day').val() && $('#start_month').val() == $('#end_month').val() && $('#start_year').val() == $('#end_year').val());
+
+        if ($('#start_day').val() == $('#end_day').val() && $('#start_month').val() == $('#end_month').val() && $('#start_year').val() == $('#end_year').val()) {
+
+            var start = $('#start_').val();
+            var end = $('#end_').val();
+
+            console.log($('#start_').val()+" => "+$('#end_').val());
+
+            if (start >= end) {
+                console.log('c est trop petit !');
+                alert("L'heure de fin de réservation est invalide, elle doit être plus grande que l'heure de début");
+            }
+        }*/
+    });
+</script>

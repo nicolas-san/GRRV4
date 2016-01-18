@@ -1,0 +1,1 @@
+- déplacer tous les print_header dans le template

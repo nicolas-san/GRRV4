@@ -1,0 +1,10 @@
+<input class="form-control" name="duration" value="{{ duration }}" id="spinner" />
+<script type="text/javascript" src="js/jquery.mousewheel.js"></script>
+<script>
+    $(function() {
+        $('#spinner').spinner({
+            min: 1,
+            page: 10
+        });
+    });
+</script>

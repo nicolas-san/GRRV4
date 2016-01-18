@@ -1,0 +1,721 @@
+{#
+/**
+ * viewEntry.html.twig
+ * Template viewEntry
+ * Ce script fait partie de l'application GRR
+ *
+ * @author      Bouteillier Nicolas <bouteillier.nicolas@kaizendo.fr>
+ * @copyright	Copyright 2015 Bouteillier Nicolas
+ *
+ * @link		http://www.gnu.org/licenses/licenses.html
+ *
+ * This file is part of GRR.
+ *
+ * GRR is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * GRR is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GRR; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+#}
+<div xmlns="http://www.w3.org/1999/html">
+    <fieldset><legend style="font-size:12pt;font-weight:bold">{{ vocab.entry }}{{ vocab.deux_points }}{{ lienResaPlanning }}</legend>
+        <table border="0">
+            <tr>
+                <td>
+                    <b>
+                        {{ vocab.description }}
+                    </b>
+                </td>
+                <td>
+                    {{ description }}
+                </td>
+            </tr>
+            {% for field in overloadData %}
+                <tr>
+                    <td>
+                        <b>{{ field.name }} {{ vocab.deux_points }}</b>
+                    </td>
+                    {% if field.fieldtype != "checkbox" %}
+                        <td>
+                            {{ field.value }}
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            <tr>
+                <td>
+                    <b>
+
+                        {{ vocab.room }} {{ vocab.deux_points }}
+
+                    </b>
+                </td>
+                <td>
+
+                    {{ areaName}} - {{ roomName }}
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>
+
+                        {{ vocab.start_date }}{{ vocab.deux_points}}
+
+                    </b>
+                </td>
+                <td>
+
+                    {{ startDate }}
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>
+
+                        {{ vocab.duration }}
+
+                    </b>
+                </td>
+                <td>
+
+                    {{ duration }} {{ durUnits }}
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>
+                        {{ vocab.end_date }}
+
+			        </b>
+                </td>
+                <td>
+
+                    {{ endDate }}
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b> {#{{ vocab.type }}#}Organisme {{ vocab.deux_points }}</b>
+                </td>
+                <td>
+                    {{ typeName }}
+                </td>
+            </tr>
+            {% if beneficiaireExt %}
+                <tr>
+                    <td>
+                        <b>
+
+                            {{ vocab.reservation_au_nom_de }}{{ vocab.deux_points }}
+
+                        </b>
+                    </td>
+                    <td>
+
+                        {{ beneficiaireExtNomPrenom|raw }} - <a href="mailto:{{ mailBeneficiaire }}">{{ mailBeneficiaire }}</a>
+
+                    </td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td>
+                    <b>
+
+                        {{ vocab.created_by }}{{ vocab.deux_points }}
+
+                    </b>
+                </td>
+                <td>
+                    &nbsp;{{ beneficiaireNomPrenom|raw }} - <a href="mailto:{{ beneficiaireMail }}">{{ beneficiaireMail }}</a> - {{ telCreatedBy }}
+
+                    {% if empruntee %}
+                        <span class="avertissement">
+                            {{ vocab.reservation_en_cours }}
+                            <img src="img_grr/buzy_big.png" align=middle alt="{{ vocab.ressource_actuellement_empruntee }}" title="{{ vocab.ressource_actuellement_empruntee }}" border="0" width="30" height="30" class="print_image" />
+                        </span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>
+
+                        {{ vocab.lastupdate }}{{ vocab.deux_points }}
+
+                    </b>
+                </td>
+                <td>
+
+                    {{ updated }}
+
+                </td>
+            </tr>
+            {% if keys %}
+                <tr>
+                    <td>
+                        <b>
+
+                        {{ vocab.clef }}{{ vocab.deux_points }}
+
+                        </b>
+                    </td>
+                    <td>
+
+                        <img src="img_grr/key.png" alt="clef">
+
+                    </td>
+                </tr>
+            {% endif %}
+            {% if courrier %}
+                <tr>
+	                <td>
+				        <b>
+
+                            {{ vocabourrier }}{{ vocab.deux_points }}
+
+	        			</b>
+			        </td>
+			        <td>
+
+                    <img src="img_grr/courrier.png" alt="courrier">';
+
+		    	    </td>
+		        </tr>
+            {% endif %}
+            {% if aConfirmerPlusTard %}
+                <tr>
+                    <td colspan="2">
+                        <div class="alert alert-danger" role="alert">
+                            <b> {{ vocab.reservation_a_confirmer_au_plus_tard_le }} {{ dateConfirmation }}</b></div>
+                    </td>
+                </tr>
+            {% endif %}
+            {% if moderate == 1 %}
+                <tr>
+                    <td>
+                        <b>{{ vocab.moderation }}{{ vocab.deux_points }}</b>
+                    </td>
+                    <td class="avertissement">
+                        <strong>{{ vocab.en_attente_moderation }}</strong>
+                    </td>
+                </tr>
+            {% elseif moderate == 2 %}
+                {% if moderable %}
+                    <tr>
+                        <td>
+                            <b>{{ vocab.moderation }}{{ vocab.deux_points }}</b>
+                        </td>
+                        <td>
+                            <strong>{{ vocab.moderation_acceptee_par }} {{ nomModo }}  - <a href="mailto:{{ mailModo }}">{{ mailModo }}</a> - {{ telModo }}</strong>
+                            {% if description %}
+                                <br />{{ description }}
+                            {% endif %}
+                        </td></tr>
+                {% endif %}
+            {% elseif moderate == 3 %}
+                {% if moderable %}
+                <tr>
+                    <td>
+                        <b>{{ vocab.moderation }} {{ vocab.deux_points }}</b>
+                    </td>
+                    <td class="avertissement">
+                        <strong>{{ vocab.moderation_acceptee_par }} {{ nomModo }}  - <a href="mailto:{{ mailModo }}">{{ mailModo }}</a> - {{ telModo }}</strong>
+                        {% if description %}
+                            <br />{{ description }}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+            {% endif %}
+            <tr>
+                <td colspan="2">
+                    <button class="btn btn-primary" onclick="{{ onClickEdit }}">{{ vocab.editentry }}</button>
+                    <button class="btn btn-info" onclick="{{ onClickCopy }}">{{ vocab.copyentry }}</button>
+                    {% if canDeleteOrCreate %}
+                        <a class="btn btn-danger" type="button" href="{{ deleteHref }}" onclick="return confirm('{{ messageConfirmation }}'); ">{{ vocab.deleteentry }}</a>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    {% if repeatId %}
+    <fieldset>
+        <legend style="font-weight:bold">{{ vocab.periodicite_associe }}</legend>
+        <table cellpadding="1">
+            <tr>
+                <td>
+                    <b>{{ vocab.rep_type }}</b>
+                </td>
+                <td>
+                    {{ affichePeriod }}
+                </td>
+            </tr>
+            {% if repType != 0 %}
+                {% if repType == 2 %}
+                    {% if opt != false %}
+                        <tr>
+                            <td>
+                                <b>{% if dayPluriel %}{{ vocab.rep_rep_days }}{% else %}{{ vocab.rep_rep_day }}{% endif %}</b>
+                            </td>
+                            <td>
+                                {{ opt }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endif %}
+                {% if repType == 6 %}
+                    {% if joursCyclesActifs %}
+                        <tr>
+                            <td>
+                                <b>{{ vocab.rep_rep_day }}</b>
+                            </td>
+                            <td>
+                                {{ vocab.jour_cycle }} {{ jourCycle }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endif %}
+                <tr>
+                    <td>
+                        <b>{{ vocab.date }}{{ vocab.deux_points }}</b>
+                    </td>
+                    <td>
+                        {{ startDate }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>{{ vocab.duration }}</b>
+                    </td>
+                    <td> 
+                        {{ duration }} {{ durUnits }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>{{ vocab.rep_end_date }}</b>
+                    </td>
+                    <td>
+                        {{ rep_end_date }}
+                    </td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td colspan="2">
+                        <input class="btn btn-primary" type="button" onclick="location.href='{{ seriesOnclickEdit }}'" value="{{ vocab.editseries }}">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <a class="btn btn-danger" type="button" href="{{ seriesHrefDelete }}" onclick="return confirm('{{ seriesMessageConfirmation }}');">{{ vocab.deleteseries }}</a>
+                    </td>
+                </tr>
+            {% endif %}
+        </table>
+    </fieldset>
+    {#{% if pdfLink %}
+        <br>
+            <input class="btn btn-primary" onclick="myFunction('{{ id }}')" value="{{ vocab.Generer_pdf }}" >
+    {% endif %}#}
+    {% if moderationForm %}
+        <form action="view_entry.php" method="get">
+            <input type="hidden" name="action_moderate" value="y" />
+            <input type="hidden" name="id" value="{{ id }}" />
+            {% if page %}
+                <input type="hidden" name="page" value="{{ page }}" />
+            {% endif %}
+            <fieldset>
+                <legend style="font-weight:bold">{{ vocab.moderate_entry }}</legend>
+                <p>
+                    <label>
+                        <input type="radio" name="moderate" value="1" checked="checked" />{{ vocab.accepter_resa }}
+                    </label>
+                    <br />
+                    <label>
+                        <input type="radio" name="moderate" value="0" />{{ vocab.refuser_resa }}
+                    </label>
+                    {% if repeatId %}
+                        <br />
+                        {# todo add labels #}
+                        <input type="radio" name="moderate" value="S1" />{{ vocab.accepter_resa_serie }}
+                        <br />
+                        <input type="radio" name="moderate" value="S0" />{{ vocab.refuser_resa_serie }}
+                    {% endif %}
+                </p>
+                <p>
+                    <label for="description">{{ vocab.justifier_decision_moderation }}{{ vocab.deux_points }}</label>
+                    <textarea class="form-control" name="description" id="description" cols="40" rows="3"></textarea>
+                </p>
+                <br />
+                    <div style="text-align:center;">
+                            <input class="btn btn-primary" type="submit" name="commit" value="{{ vocab.save }}" />
+                    </div>
+            </fieldset>
+        </form>
+    {% endif %}
+    
+    {% if ressourceEmprunteeForm %}
+        <form action="view_entry.php" method="get">
+            <fieldset><legend style="font-weight:bold">{{ vocab.reservation_en_cours }}</legend>
+                <span class="larger">{{ vocab.signaler_reservation_en_cours }}</span>{{ vocab.deux_points }}
+                <br />{{ vocab.explications_signaler_reservation_en_cours }}
+                {% if afficheRessourceEmprunte != 'yes' and afficheRessourceEmprunte is iterable %}
+                    {{ include('helpers/ressourceEmpruntee.html.twig', afficheRessourceEmprunte) }}
+                {% endif %}
+                <br />
+                <input type="radio" name="statut_id" value="-" {% if statusIdChecked1 %}checked="checked"{% endif %} />{{ vocab.signaler_reservation_en_cours_option_0 }}
+                <br />
+                <br />
+                <input type="radio" name="statut_id" value="y" {% if statusIdCheckedY %}checked="checked"{% endif %} />{{ vocab.signaler_reservation_en_cours_option_1 }}
+                <br />
+                <br />
+                <input type="radio" name="statut_id" value="e" {% if statusIdCheckedE %}checked="checked"{% endif %} {% if statusIdCheckedEDisabled %}disabled{% endif %} />{{ vocab.signaler_reservation_en_cours_option_2 }}
+                {% if necessiteFonctionMail %}
+                    <br />
+                    <i>{{ vocab.necessite_fonction_mail_automatique }}</i>
+                {% endif %}
+                {% if mailAuto %}
+                    <br />
+                    <br />
+                    <input type="checkbox" name="envoyer_mail" value="y" {% if mailExist == false %}disabled{% endif %} />{{ vocab.envoyer_maintenant_mail_retard }}
+                    <input type="hidden" name="mail_exist" value="{% if mailExist != false %}{{ mailExist }}{% endif %}" />
+                {% endif %}
+                {% if necessiteFonctionMail %}
+                    <br />
+                    <i>{{ vocab.necessite_fonction_mail_automatique }}</i>
+                {% endif %}
+                <br />
+                <div style="text-align:center;">
+                    <input class="btn btn-primary" type="submit" name="ok" value="{{ vocab.save }}" />
+                </div>
+            </fieldset>
+                <div>
+                    <input type="hidden" name="day" value="{{ day }}" />
+                    <input type="hidden" name="month" value="{{ month }}" />
+                    <input type="hidden" name="year" value="{{ year }}" />
+                    <input type="hidden" name="page" value="{{ page }}" />
+                    <input type="hidden" name="id" value="{{ id }}" />
+                    <input type="hidden" name="back" value="{{ back }}" />
+                </div>
+            </form>
+    {% endif %}
+    
+  {#  {% if keyEtCourrier %}
+        <form action="view_entry.php" method="get">
+            <fieldset>
+                <legend style="font-weight:bold">{{ vocab.reservation_en_cours }}</legend>
+                <span class="larger">{{ vocab.status_clef }}{{ vocab.deux_points }}</span>
+                <br />
+                <input type="checkbox" name="clef" value="y" {% if keyChecked %}checked{% endif %} />{{ vocab.msg_clef }}
+                {% if showCourrier %}
+                    <br />
+                    <span class="larger">{{ vocab.status_courrier }}{{ vocab.deux_points }}</span>
+                    <br />
+                    <input type="checkbox" name="courrier" value="y" {% if courrierChecked %}checked{% endif %} />{{ vocab.msg_courrier }}
+                {% endif %}
+                <br />
+                <br />
+                <div style="text-align:center;">
+                    <input class="btn btn-primary" type="submit" name="ok" value="{{ vocab.save }}" />
+                </div>
+            </fieldset>
+            <div>
+                <input type="hidden" name="day" value="{{ day }}" />
+                <input type="hidden" name="month" value="{{ month }}" />
+                <input type="hidden" name="year" value="{{ year }}" />
+                <input type="hidden" name="page" value="{{ page }}" />
+                <input type="hidden" name="id" value="{{ id }}" />
+                <input type="hidden" name="back" value="{{ back }}" />
+            </div>
+        </form>
+    {% endif %}#}
+    {# todo prévoir une gestion automatique, avec un if iterable par exemple, pour le template de base #}
+
+    {% if plugins.kzdRestauration.status != false and plugins.kzdRestauration.type == 1 %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Demande de restauration
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <h5 class="text-primary">Petit déjeuner + pause</h5>
+                                    Heure : {{ plugins.kzdRestauration.dataBrutes.16 }}<br />
+                                    Pause café "Allegro" : {{ plugins.kzdRestauration.dataBrutes.17 }}<br />
+                                    Petit déjeuné "Le Parisien" : {{ plugins.kzdRestauration.dataBrutes.18 }}<br />
+                                    Petit Déjeuné "Le Club" : {{ plugins.kzdRestauration.dataBrutes.19 }}<br />
+                                    <br />
+                                    <br />
+                                    Heure : {{ plugins.kzdRestauration.dataBrutes.37 }}<br />
+                                    Pause café "Allegro" : {{ plugins.kzdRestauration.dataBrutes.38 }}<br />
+                                    Petit déjeuné "Le Parisien" : {{ plugins.kzdRestauration.dataBrutes.39 }}<br />
+                                    Petit Déjeuné "Le Club" : {{ plugins.kzdRestauration.dataBrutes.40 }}<br />
+                                    <br />
+                                    <br />
+                                    Heure : {{ plugins.kzdRestauration.dataBrutes.41 }}<br />
+                                    Pause café "Allegro" : {{ plugins.kzdRestauration.dataBrutes.42 }}<br />
+                                    Petit déjeuné "Le Parisien" : {{ plugins.kzdRestauration.dataBrutes.43 }}<br />
+                                    Petit Déjeuné "Le Club" : {{ plugins.kzdRestauration.dataBrutes.44 }}<br />
+                                    <br />
+                                    <br />
+                                    Heure : {{ plugins.kzdRestauration.dataBrutes.45 }}<br />
+                                    Pause café "Allegro" : {{ plugins.kzdRestauration.dataBrutes.46 }}<br />
+                                    Petit déjeuné "Le Parisien" : {{ plugins.kzdRestauration.dataBrutes.47 }}<br />
+                                    Petit Déjeuné "Le Club" : {{ plugins.kzdRestauration.dataBrutes.48 }}<br />
+                                    <br />
+                                    <p>
+                                        Divers : {{ plugins.kzdRestauration.dataBrutes.49 }}
+                                    </p>
+                                </div>
+                                <div class="col-md-12">
+                                    <h5 class="text-primary">SELF/Service à table (Salle de restaurant)</h5>
+                                    Heure : {{ plugins.kzdRestauration.dataBrutes.20 }}<br />
+                                    Déjeuner self : {{ plugins.kzdRestauration.dataBrutes.21 }}<br />
+                                    À l'assiette : {{ plugins.kzdRestauration.dataBrutes.22 }}<br />
+                                    <p>
+                                        Divers : {{ plugins.kzdRestauration.dataBrutes.27 }}
+                                    </p>
+                                    {% if plugins.kzdRestauration.dataBrutes.23 %}
+                                        <br />
+                                        Vin Sodexo
+                                    {% endif %}
+                                    {% if plugins.kzdRestauration.dataBrutes.24 %}
+                                        <br />
+                                        Vin Organisme
+                                    {% endif %}
+                                    {% if plugins.kzdRestauration.dataBrutes.25 %}
+                                        <br />
+                                        Café
+                                    {% endif %}
+                                    {% if plugins.kzdRestauration.dataBrutes.26 %}
+                                        <br />
+                                        Eau
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-12">
+                                    <h5 class="text-primary">CLUB</h5>
+                                    <p>
+                                        Divers : {{ plugins.kzdRestauration.dataBrutes.36 }}
+                                    </p>
+                                    <h6 class="text-primary">Petit club</h6>
+                                    Heure : {{ plugins.kzdRestauration.dataBrutes.28 }}<br />
+                                    Menu classique : {{ plugins.kzdRestauration.dataBrutes.29 }}<br />
+                                    Menu Découverte : {{ plugins.kzdRestauration.dataBrutes.30 }}<br />
+                                    Menu Terroir : {{ plugins.kzdRestauration.dataBrutes.31 }}<br />
+
+                                    {% if plugins.kzdRestauration.dataBrutes.32 %}
+                                        <br />
+                                        Vin Sodexo
+                                    {% endif %}
+                                    {% if  plugins.kzdRestauration.dataBrutes.33 %}
+                                        <br />
+                                        Vin Organisme
+                                    {% endif %}
+                                    {% if  plugins.kzdRestauration.dataBrutes.34 %}
+                                        <br />
+                                        Café
+                                    {% endif %}
+                                    {% if  plugins.kzdRestauration.dataBrutes.35 %}
+                                        <br />
+                                        Eau
+                                    {% endif %}
+
+                                    <br />
+                                    <br />
+
+                                    <h6 class="text-primary">Club n°1 10p</h6>
+                                    Heure : {{ plugins.kzdRestauration.dataBrutes.50 }}<br />
+                                    Menu classique : {{ plugins.kzdRestauration.dataBrutes.51 }}<br />
+                                    Menu Découverte : {{ plugins.kzdRestauration.dataBrutes.52 }}<br />
+                                    Menu Terroir : {{ plugins.kzdRestauration.dataBrutes.53 }}<br />
+                                    {% if plugins.kzdRestauration.dataBrutes.54 %}
+                                        <br />
+                                        Vin Sodexo
+                                    {% endif %}
+                                    {% if  plugins.kzdRestauration.dataBrutes.55 %}
+                                        <br />
+                                        Vin Organisme
+                                    {% endif %}
+                                    {% if  plugins.kzdRestauration.dataBrutes.56 %}
+                                        <br />
+                                        Café
+                                    {% endif %}
+                                    {% if  plugins.kzdRestauration.dataBrutes.57 %}
+                                        <br />
+                                        Eau
+                                    {% endif %}
+
+                                    <br />
+                                    <br />
+
+                                    <h6 class="text-primary">Club n°2 10p</h6>
+                                    Heure : {{ plugins.kzdRestauration.dataBrutes.58 }}<br />
+                                    Menu classique : {{ plugins.kzdRestauration.dataBrutes.59 }}<br />
+                                    Menu Découverte : {{ plugins.kzdRestauration.dataBrutes.60 }}<br />
+                                    Menu Terroir : {{ plugins.kzdRestauration.dataBrutes.61 }}<br />
+                                    {% if plugins.kzdRestauration.dataBrutes.62 %}
+                                        <br />
+                                        Vin Sodexo
+                                    {% endif %}
+                                    {% if  plugins.kzdRestauration.dataBrutes.63 %}
+                                        <br />
+                                        Vin Organisme
+                                    {% endif %}
+                                    {% if  plugins.kzdRestauration.dataBrutes.64 %}
+                                        <br />
+                                        Café
+                                    {% endif %}
+                                    {% if  plugins.kzdRestauration.dataBrutes.65 %}
+                                        <br />
+                                        Eau
+                                    {% endif %}
+
+                                    <br />
+                                    <br />
+
+                                    <h6 class="text-primary">Grand club 20p</h6>
+                                    Heure : {{ plugins.kzdRestauration.dataBrutes.66 }}<br />
+                                    Menu classique : {{ plugins.kzdRestauration.dataBrutes.67 }}<br />
+                                    Menu Découverte : {{ plugins.kzdRestauration.dataBrutes.68 }}<br />
+                                    Menu Terroir : {{ plugins.kzdRestauration.dataBrutes.69 }}<br />
+                                    {% if plugins.kzdRestauration.dataBrutes.70 %}
+                                        <br />
+                                        Vin Sodexo
+                                    {% endif %}
+                                    {% if  plugins.kzdRestauration.dataBrutes.71 %}
+                                        <br />
+                                        Vin Organisme
+                                    {% endif %}
+                                    {% if  plugins.kzdRestauration.dataBrutes.72 %}
+                                        <br />
+                                        Café
+                                    {% endif %}
+                                    {% if  plugins.kzdRestauration.dataBrutes.73 %}
+                                        <br />
+                                        Eau
+                                    {% endif %}
+                                </div>
+                                    {#<pre>
+                                        {{ dump(plugins.kzdRestauration.dataBrutes) }}
+                                    </pre>#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% elseif plugins.kzdRestauration.status != false and plugins.kzdRestauration.type == 2 %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Demande de restauration
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <h5 class="text-primary">Petit déjeuner / café / eau minérale (première ligne) </h5>
+                                    Heure : {{ plugins.kzdRestauration.dataBrutes.6 }}<br />
+                                    Café simple : {{ plugins.kzdRestauration.dataBrutes.7 }}<br />
+                                    Café d'accueil : {{ plugins.kzdRestauration.dataBrutes.8 }}<br />
+                                    Café + thé : {{ plugins.kzdRestauration.dataBrutes.9 }}<br />
+                                    Eau minérale 33cl : {{ plugins.kzdRestauration.dataBrutes.10 }}<br />
+                                    Eau minérale 1.5L : {{ plugins.kzdRestauration.dataBrutes.11 }}<br />
+                                </div>
+                                <div class="col-md-12">
+                                    <h5 class="text-primary">Petit déjeuner / café / eau minérale (deuxième ligne)  </h5>
+                                    Heure : {{ plugins.kzdRestauration.dataBrutes.12 }}<br />
+                                    Café simple : {{ plugins.kzdRestauration.dataBrutes.13 }}<br />
+                                    Café d'accueil : {{ plugins.kzdRestauration.dataBrutes.14 }}<br />
+                                    Café + thé : {{ plugins.kzdRestauration.dataBrutes.15 }}<br />
+                                    Eau minérale 33cl : {{ plugins.kzdRestauration.dataBrutes.16 }}<br />
+                                    Eau minérale 1.5L : {{ plugins.kzdRestauration.dataBrutes.17 }}<br />
+                                </div>
+                                <div class="col-md-12">
+                                    <h5 class="text-primary">Petit déjeuner / café / eau minérale (troisième ligne)  </h5>
+                                    Heure : {{ plugins.kzdRestauration.dataBrutes.18 }}<br />
+                                    Café simple : {{ plugins.kzdRestauration.dataBrutes.19 }}<br />
+                                    Café d'accueil : {{ plugins.kzdRestauration.dataBrutes.20 }}<br />
+                                    Café + thé : {{ plugins.kzdRestauration.dataBrutes.21 }}<br />
+                                    Eau minérale 33cl : {{ plugins.kzdRestauration.dataBrutes.22 }}<br />
+                                    Eau minérale 1.5L : {{ plugins.kzdRestauration.dataBrutes.23 }}<br />
+                                </div>
+                                <div class="col-md-12">
+                                    <h5 class="text-primary">Palteaux - repas</h5>
+                                    Heure : {{ plugins.kzdRestauration.dataBrutes.24 }}<br />
+                                    <h6>En assiette</h6>
+                                    <p>
+                                        Plat-dessert : {{ plugins.kzdRestauration.dataBrutes.26 }}<br />
+                                        Entree-plate-dessert : {{ plugins.kzdRestauration.dataBrutes.27 }}<br />
+                                    </p>
+                                    <h6>En buffet</h6>
+                                    <p>
+                                        Plat-dessert : {{ plugins.kzdRestauration.dataBrutes.28 }}<br />
+                                        Entree-plate-dessert : {{ plugins.kzdRestauration.dataBrutes.29 }}<br />
+                                    </p>
+                                    <p>
+                                        Divers : {{ plugins.kzdRestauration.dataBrutes.25 }}
+                                    </p>
+
+                                </div>
+                                <div class="col-md-12">
+                                    <h5 class="text-primary">Buffet</h5>
+                                    Heure : {{ plugins.kzdRestauration.dataBrutes.30 }}<br />
+                                    À table : {{ plugins.kzdRestauration.dataBrutes.31 }}<br />
+                                    Les tables cana : {{ plugins.kzdRestauration.dataBrutes.32 }}<br />
+                                    Sodexo : {{ plugins.kzdRestauration.dataBrutes.33 }}<br />
+                                    Autre : {{ plugins.kzdRestauration.dataBrutes.34 }}<br />
+                                </div>
+                                <div class="col-md-12">
+                                    <h5 class="text-primary">Annexes</h5>
+                                    Verres : {{ plugins.kzdRestauration.dataBrutes.35 }}<br />
+                                    Flûtes : {{ plugins.kzdRestauration.dataBrutes.36 }}<br />
+                                    Champagne : {{ plugins.kzdRestauration.dataBrutes.37 }}<br />
+                                    Assiettes : {{ plugins.kzdRestauration.dataBrutes.38 }}<br />
+                                    Couverts : {{ plugins.kzdRestauration.dataBrutes.39 }}<br />
+                                    Vin rouge : {{ plugins.kzdRestauration.dataBrutes.40 }}<br />
+                                    Vin blanc : {{ plugins.kzdRestauration.dataBrutes.41 }}<br />
+                                    <p>
+                                        Autre : {{ plugins.kzdRestauration.dataBrutes.42 }}
+                                    </p>
+                                    Café après le repas : {{ plugins.kzdRestauration.dataBrutes.43 }}
+                                </div>
+                                {#<pre>
+                                    {{ dump(plugins.kzdRestauration.dataBrutes) }}
+                                </pre>#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {#{{ dump(plugins.kzdRestauration) }}#}
+
+</div>

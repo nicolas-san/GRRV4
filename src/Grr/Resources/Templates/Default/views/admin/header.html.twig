@@ -1,0 +1,135 @@
+{#
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="Robots" content="noindex" />
+    <title>{{ title }}</title>
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="../../src/Grr/Resources/Templates/{{ template }}/public/css/{{ sheetcss }}/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../src/Grr/Resources/Templates/{{ template }}/public/css/{{ sheetcss }}/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../src/Grr/Resources/Templates/{{ template }}/public/css/{{ sheetcss }}/mod_bootstrap.css" />
+    {% if use_admin %}
+        &#123;&#35;<link rel="stylesheet" type="text/css" href="../include/admin_grr.css" />&#35;&#125;
+        <link rel="stylesheet" type="text/css" href="../../src/Grr/Resources/Templates/{{ template }}/public/css/{{ sheetcss }}/admin_style.css" />
+    {% endif %}
+    <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/jquery-ui.min.js"></script>
+    {% if use_select2 %}
+        <link rel="stylesheet" type="text/css" href="../../src/Grr/Resources/Templates/{{ template }}/public/css/themes/{{ template }}/css/select2.css" />
+        <link rel="stylesheet" type="text/css" href="../../src/Grr/Resources/Templates/{{ template }}/public/css/themes/{{ template }}/css/select2-bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="../../src/Grr/Resources/Templates/{{ template }}/public/css/themes/{{ template }}/css/bootstrap-multiselect.css">
+        <link rel="stylesheet" type="text/css" href="../../src/Grr/Resources/Templates/{{ template }}/public/css/themes/{{ template }}/css/bootstrap-clockpicker.min.css">
+
+        <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/bootstrap-clockpicker.js"></script>
+        <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/bootstrap-multiselect.js"></script>
+        <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/select2.js"></script>
+        <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/select2_locale_fr.js"></script>
+    {% endif %}
+    {% if pview %}
+        <link rel="stylesheet" type="text/css" href="../../src/Grr/Resources/Templates/{{ template }}/public/css/themes/print/css/style.css" />
+    {% endif %}
+    <link rel="stylesheet" type="text/css" href="../../src/Grr/Resources/Templates/{{ template }}/public/css/themes/{{ template }}/css/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="../../src/Grr/Resources/Templates/{{ template }}/public/css/themes/{{ template }}/css/jquery-ui-timepicker-addon.css" >
+
+    <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/jquery.validate.js"></script>
+    <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/jquery-ui-timepicker-addon.js"></script>
+    <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/html2canvas.js"></script>
+    <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/menu.js"></script>
+    <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/jspdf.min.js"></script>
+    <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/pdf.js" ></script>
+    <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/popup.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/functions.js" ></script>
+    {% if use_tooltip_js %}
+        <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/tooltip.js"></script>
+    {% endif %}
+    {% if selection %}
+        <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/selection.js" ></script>
+    {% endif %}
+    {% if clock_file %}
+        <script type="text/javascript" src="../../src/Grr/Resources/Templates/{{ template }}/public/js/{{ clock_file }}"></script>
+    {% endif %}
+    {% if notPhp3 != null %}
+        {{ notPhp3 }}
+    {% endif %}
+</head>
+<body>#}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/cupertino/jquery-ui.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+
+    <![endif]-->
+    <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    {#<link href="/bootstrap/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="/bootstrap/img/apple-touch-icon-72x72.png" sizes="72x72" rel="apple-touch-icon">
+    <link href="/bootstrap/img/apple-touch-icon-114x114.png" sizes="114x114" rel="apple-touch-icon">#}
+
+    <meta name="Robots" content="noindex" />
+    <title>{{ title }}</title>
+    <link rel="shortcut icon" href="favicon.ico" />
+
+    <link rel="stylesheet" type="text/css" href="../src/Grr/Resources/Templates/Modern/public/css/{{ sheetcss }}/style.css" />
+    {#<link rel="stylesheet" type="text/css" href="../src/Grr/Resources/Templates/Modern/public/css/themes/default/style.css" />#}
+    {#<link rel="stylesheet" type="text/css" href="../src/Grr/Resources/Templates/Modern/public/css/{{ sheetcss }}/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../src/Grr/Resources/Templates/Modern/public/css/{{ sheetcss }}/mod_bootstrap.css" />#}
+    {% if use_admin %}
+        <link rel="stylesheet" type="text/css" href="../src/Grr/Resources/Templates/Modern/public/css/{{ sheetcss }}/admin_style.css" />
+    {% endif %}
+    {% if use_select2 %} {# uniquement utilisé dans edit_entry, desactivé pour l'instant #}
+        <link rel="stylesheet" type="text/css" href="../src/Grr/Resources/Templates/Modern/public/css/themes/default/css/select2.css" />
+        <link rel="stylesheet" type="text/css" href="../src/Grr/Resources/Templates/Modern/public/css/themes/default/css/select2-bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="../src/Grr/Resources/Templates/Modern/public/css/themes/default/css/bootstrap-multiselect.css">
+        <link rel="stylesheet" type="text/css" href="../src/Grr/Resources/Templates/Modern/public/css/themes/default/css/bootstrap-clockpicker.min.css">
+        <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/bootstrap-clockpicker.js"></script>
+        <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/bootstrap-multiselect.js"></script>
+        <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/select2.js"></script>
+        <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/select2_locale_fr.js"></script>
+    {% endif %}
+    {% if pview %}
+        <link rel="stylesheet" type="text/css" href="../src/Grr/Resources/Templates/Modern/public/css/themes/print/css/style.css" />
+    {% endif %}
+    <link rel="stylesheet" type="text/css" href="../src/Grr/Resources/Templates/Modern/public/css/themes/default/css/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="../src/Grr/Resources/Templates/Modern/public/css/themes/default/css/jquery-ui-timepicker-addon.css" >
+    <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/jquery.validate.js"></script>
+    <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/jquery-ui-timepicker-addon.js"></script>
+    <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/html2canvas.js"></script>
+    <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/menu.js"></script>
+    <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/jspdf.min.js"></script>
+    <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/pdf.js" ></script>
+    <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/popup.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/functions.js" ></script>
+    {% if use_tooltip_js %}
+        <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/tooltip.js"></script>
+    {% endif %}
+    {% if selection %}
+        <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/selection.js" ></script>
+    {% endif %}
+    {% if clock_file %}
+        <script type="text/javascript" src="../src/Grr/Resources/Templates/Modern/public/js/{{ clock_file }}"></script>
+    {% endif %}
+    {% if notPhp3 != null %}
+        {{ notPhp3 }}
+    {% endif %}
+</head>
+<body>
+

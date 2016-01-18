@@ -1,0 +1,938 @@
+<script type="text/javascript" >
+    function insertChampsAdd(){
+        jQuery.ajax({
+            type: 'GET',
+            url: 'edit_entry_champs_add.php',
+            data: {
+                areas:'{{ area }}',
+                id: '{{ id }}',
+                room: '{{ room }}'
+            },
+            success: function(returnData)
+            {
+                $("#div_champs_add").html(returnData);
+            },
+            error: function(data)
+            {
+                alert('Erreur lors de l execution de la commande AJAX pour le edit_entry_champs_add.php ');
+            }
+        });
+    }
+    function insertTypes(){
+        jQuery.ajax({
+            type: 'GET',
+            url: 'edit_entry_types.php',
+            data: {
+                areas:'{{ area }}',
+                type: '{{ etype }}',
+                room:'{{ room }}'
+            },
+            success: function(returnData){
+                //console.log(returnData);
+
+                $('#div_types').html(returnData);
+                $('#typeLabel').html("Organisme *");
+
+                {# première partie da la string c'est le domaine non modéré, le reste ce sont les services #}
+                var arrayChampsLibre = "{{ userChampsLibre }}".split("@");
+                console.log(arrayChampsLibre);
+
+                var arrayTypesUser = arrayChampsLibre[1].split(";");
+                //console.log(arrayTypesUser);
+                if (arrayTypesUser.length > 0) {
+                    // je cache la première
+                    $('#defaultTypeOption').hide();
+                    // tant que typeOption$i existe je continue
+                    var i = 0;
+                    var serviceDuUser = [];
+                    while ($("option#typeOption" + i).length) {
+                        var optionEnCours = $("option#typeOption" + i);
+                        optionEnCours.hide();
+                        console.log(optionEnCours.text());
+                        arrayTypesUser.forEach(function (service) {
+                            if (optionEnCours.text() == service) {
+                                //console.log("dans le if => "+i);
+                                serviceDuUser.push(i);
+                            }
+                            /*console.log("Dans forEach");
+                             console.log(service);
+                             console.log(optionEnCours.text());
+                             console.log("Fin du tour ###############");*/
+                            //console.log(optionEnCours.text() +" == "+ service);
+                            //console.log("##############");
+                        });
+
+                        //console.log(optionEnCours.text());
+                        i++;
+                    }
+                    console.log("Les services : " + serviceDuUser);
+                    var first = true;
+                    serviceDuUser.forEach(function (numService) {
+                        $("option#typeOption" + numService).show();
+                        //console.log($("option#typeOption" + numService));
+                        if (first) {
+                            $("option#typeOption" + numService).prop('selected', 'selected');
+                        }
+                        first = false;
+                    });
+                    if (serviceDuUser.length <= 0) {
+                        /* aucun service autorisé */
+                        $('#defaultTypeOption').text("Aucun organisme autorisé, erreur de configuration de l'utilisateur");
+                        $('#defaultTypeOption').show();
+                        //console.log("aucun service");
+
+                    }
+
+                }
+
+            },
+            error: function(data){
+                alert('Erreur lors de l execution de la commande AJAX pour le edit_entry_types.php ');
+            }
+        });
+
+    }
+    function insertProfilBeneficiaire(){
+        jQuery.ajax({
+            type: 'GET',
+            url: 'edit_entry_beneficiaire.php',
+            data: {
+                beneficiaire:'ADMINISTRATEUR',
+                identifiant_beneficiaire: '{{ beneficiaire }}'
+            },
+            success: function(returnData)
+
+            {
+                $("#div_profilBeneficiaire").html(returnData);
+            },
+            error: function(data)
+
+            {
+                alert('Erreur lors de l execution de la commande AJAX pour le edit_entry_beneficiaire.php ');
+            }
+        });
+    }
+    function check_1 ()
+    {
+        menu = document.getElementById('menu2');
+        if (menu) {
+            if (!document.forms["main"].rep_type[2].checked) {
+                document.forms["main"].elements['rep_day[0]'].checked=false;
+                document.forms["main"].elements['rep_day[1]'].checked=false;
+                document.forms["main"].elements['rep_day[2]'].checked=false;
+                document.forms["main"].elements['rep_day[3]'].checked=false;
+                document.forms["main"].elements['rep_day[4]'].checked=false;
+                document.forms["main"].elements['rep_day[5]'].checked=false;
+                document.forms["main"].elements['rep_day[6]'].checked=false;
+                menu.style.display = "none";
+            } else {
+                menu.style.display = "";
+            }
+        }
+        {% if settings.joursCyclesActif == 'Oui' %}
+            menu = document.getElementById('menuP');
+            if (menu)
+            {
+                if (!document.forms["main"].rep_type[5].checked)
+                {
+                    menu.style.display = "none";
+                }
+                else
+                {
+                    menu.style.display = "";
+                }
+            }
+        {% endif %}
+    }
+
+    function check_2 ()
+    {
+        document.forms["main"].rep_type[2].checked=true;
+        check_1 ();
+    }
+    function check_3 ()
+    {
+        document.forms["main"].rep_type[3].checked=true;
+    }
+    function check_4 ()
+    {
+        menu = document.getElementById('menu4');
+        if (menu) {
+            if (!document.forms["main"].beneficiaire.options[0].selected) {
+                menu.style.display = "none";
+                {% if settings.remplissageDescriptionBreve == '2' %}
+                    document.forms["main"].name.value=document.forms["main"].beneficiaire.options[document.forms["main"].beneficiaire.options.selectedIndex].text;
+                {% endif %}
+            } else {
+                menu.style.display = "";
+                {% if settings.remplissageDescriptionBreve == '2' %}
+                    document.forms["main"].name.value="";
+                {% endif %}
+            }
+        }
+    }
+
+    function check_5 ()
+    {
+        var menu; var menup; var menu2;
+        menu = document.getElementById('menu1');
+        menup = document.getElementById('menuP');
+        menu2 = document.getElementById('menu2');
+        if ((menu)&&(menu.style.display == "none")) {
+            menup.style.display = "none";
+            menu2.style.display = "none";
+        } else {
+            check_1();
+        }
+    }
+
+    function setdefault (name,input)
+    {
+        document.cookie = escape(name) + "=" + escape(input) +
+                ( "" ? ";expires=" + ( new Date( ( new Date() ).getTime() + ( 1000 * lifeTime ) ) ).toGMTString() : "" ) +
+                ( "" ? ";path=" + path : "") +
+                ( "" ? ";domain=" + domain : "") +
+                ( "" ? ";secure" : "");
+    }
+    function Load_entry ()
+    {
+        recoverInputs(document.forms["main"],retrieveCookie('Grr_entry'),true);
+        {% if id != '' %}
+        if (!document.forms["main"].rep_type[0].checked) {
+            clicMenu('1');
+        }
+        {% endif %}
+        {# Code d'origine, vérifier si la condition est valide : if (!$id != '') { #}
+    }
+    function Save_entry ()
+    {
+        setCookie('Grr_entry',getFormString(document.forms["main"],true));
+    }
+    function validate_and_submit ()
+    {
+        var err;
+        $("#error").html("");
+        if (document.forms["main"].benef_ext_nom) {
+            if ((document.forms["main"].beneficiaire.options[0].selected) &&(document.forms["main"].benef_ext_nom.value == "")) {
+                $("#error").append('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>{{ vocab.you_have_not_entered }}{{ vocab.deux_points }}{{ vocab.nom_beneficiaire }}</div>');
+                err = 1;
+            }
+        }
+        {%  if settings.remplissageDescriptionBreve == '1' or settings.remplissageDescriptionBreve == '2' %}
+        if (document.forms["main"].name.value == "")
+        {
+            $("#error").append('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>{{ vocab.you_have_not_entered }}{{ vocab.deux_points }}Titre de la réunion{#{{ vocab.brief_description }}#}</div>');
+            $(document.forms["main"].name).prev().addClass('text-danger');
+            err = 1;
+        }
+        {% endif %}
+        {%  for fieldtype, fieldname in overload_fields %}
+            {% if overload_fields[fieldname]['obligatoire'] == 'y'  %}
+                {% if overload_fields[fieldname]['type'] != 'list' %}
+                    if ( document.getElementById('id_{{ idtmp }}_{{ overload_fields[fieldname]['id'] }}') && document.forms['main'].addon_{{ overload_fields[fieldname]['id'] }}.value == " " ) {
+                {% else %}
+                    if (document.getElementById('id_{{ idtmp }}_{{ overload_fields[fieldname]['id'] }}') && document.forms["main"].addon_{{ overload_fields[fieldname]['id'] }}.options[0].selected == true) {
+                {% endif %}
+                        $("#error").append('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>{{ vocab.required }} </div>');
+                        err = 1;
+                    }
+            {% endif %}
+            {% if overload_fields[fieldname]['type'] == 'numeric' %}
+                    if (isNaN(document.getElementById('id_{{ idtmp }}_{{ overload_fields[fieldname]['id'] }}') && document.forms["main"].addon_{{ overload_fields[fieldname]['id'] }}.value)) {
+                        $("#error").append('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>{{ overload_fields[fieldname]['name'] }}{{ vocab.deux_points }}{{ vocab.is_not_numeric }}</div>');
+                        err = 1;
+                    }
+            {% endif %}
+        {% endfor %}
+                    if (document.forms["main"].type.value == '0') {
+                        $("#error").append('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>Vous devez choisir un service !</div>');
+                        err = 1;
+                        $('#typeLabel').addClass('text-danger');
+                    }
+
+        {% if edit_type == 'series' %}
+                    i1 = parseInt(document.forms["main"].id.value);
+                    i2 = parseInt(document.forms["main"].rep_id.value);
+                    n = parseInt(document.forms["main"].rep_num_weeks.value);
+                    if ((document.forms["main"].elements['rep_day[0]'].checked || document.forms["main"].elements['rep_day[1]'].checked || document.forms["main"].elements['rep_day[2]'].checked || document.forms["main"].elements['rep_day[3]'].checked || document.forms["main"].elements['rep_day[4]'].checked || document.forms["main"].elements['rep_day[5]'].checked || document.forms["main"].elements['rep_day[6]'].checked) && (!document.forms["main"].rep_type[2].checked)) {
+                        $("#error").append('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>{{ vocab.no_compatibility_with_repeat_type }} </div>');
+                        err = 1;
+                    }
+                    if ((!document.forms["main"].elements['rep_day[0]'].checked && !document.forms["main"].elements['rep_day[1]'].checked && !document.forms["main"].elements['rep_day[2]'].checked && !document.forms["main"].elements['rep_day[3]'].checked && !document.forms["main"].elements['rep_day[4]'].checked && !document.forms["main"].elements['rep_day[5]'].checked && !document.forms["main"].elements['rep_day[6]'].checked) && (document.forms["main"].rep_type[2].checked)) {
+                        $("#error").append('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>{{ vocab.choose_a_day }} </div>');
+                        err = 1;
+                    }
+        {% endif %}
+
+                    if (err == 1) {
+                        window.scrollTo(0, 0);
+                        return false;
+                    }
+                    document.forms["main"].submit();
+                    return true;
+
+
+    }
+
+</script>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="container">
+    <div class="row">
+        {#<div class="col-md-12">
+            <pre>
+                {{ dump(userChampsLibre) }}
+            </pre>
+        </div>#}
+        <div class="">
+
+            <h2>{{ titrePage }}</h2>
+            <br>
+            {% set champsLibre = champsLibre|split('@') %}
+            {% if moderate and (champsLibre[0] == area) %}
+                <h3><span class="texte_ress_moderee">{{ vocab.reservations_moderees }}</span></h3>
+            {% endif %}
+
+            <form class="form-horizontal" id="main" action="edit_entry_handler.php" method="get">
+
+                <script type="text/javascript" >
+                    function changeRooms( formObj ) {
+                        areasObj = eval("formObj.areas");
+                        area = areasObj[areasObj.selectedIndex].value;
+                        roomsObj = eval("formObj.elements['rooms[]']");
+                        l = roomsObj.length;
+                        for (i = l; i > 0; i--) {
+                            roomsObj.options[i] = null
+                        }
+                        switch (area) {
+                                {% for area in areasIds %}
+                                    case "{{ area.id }}":
+                                        roomsObj.size ={{ area.roomsObjSize }};
+                                    {% for option in area.roomsObjOption %}
+                                        roomsObj.options[{{ loop.index0 }}] = new Option("{{ option.1 }},{{ option.0 }}");
+                                    {% endfor %}
+                                        roomsObj.options[0].selected = true;
+                                        break;
+                                {% endfor %}
+                        }
+                    }
+                </script>
+                <div id="error"></div>
+                <div class="EditEntryTable row">
+
+                    {% if flagQuiPeutReserverPour == 'yes' %}
+
+                        <div class="form-group col-md-10">
+
+                            <label class="col-md-3 text-capitalize">{{ vocab.reservation_au_nom_de }}{{ vocab.deux_points }}</label>
+                            <div class="col-md-5">
+                                <select size="1" class="form-control" name="beneficiaire" id="beneficiaire" onchange="setdefault('beneficiaire_default','');check_4();insertProfilBeneficiaire();">
+                                    <option value="" >{{ vocab.personne_exterieure }}</option>
+                                    {% for option in options %}
+                                        <option value="{{ option.value }}" {% if option.selected %}selected="selected"{% endif %} >
+                                            {{ option.text }}
+                                        </option>
+                                    {% endfor %}
+                                    {% if optionBeneficiaireInconnu %}
+                                        <option value="-1" selected="selected" >{{ vocab.utilisateur_inconnu }}{{ optionBeneficiaireInconnu }}</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="button" class="btn btn-primary" value="{{ vocab.definir_par_defaut }}" onclick="setdefault('beneficiaire_default',document.getElementById('main').beneficiaire.options[document.getElementById('main').beneficiaire.options.selectedIndex].value)" />
+                                <span id="div_profilBeneficiaire">
+                                </span>
+                                {% if statusBenficiaire %} {{ statusBeneficiaire }} {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                        {% if tabBenef.nom != '' %}
+                            <div class="form-group col-md-5" id="menu4">
+                        {% else %}
+                            <div style="display: none;" class="form-group col-md-5"  id="menu4">
+                        {% endif %}
+
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-user">
+
+                                    </span>
+                                </div>
+                                <input class="form-control" type="text" name="benef_ext_nom" value="{{ tabBenef.nom }}" placeholder="{{ vocab.nom_beneficiaire }}">
+                            </div>
+
+                            {% if settings.automaticMail == 'yes' %}
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <span class="glyphicon glyphicon-envelope" ></span>
+                                        </div>
+                                        <input class="form-control" type="email" name="benef_ext_email" value="{{ tabBenef.email }}" placeholder="{{ vocab.email_beneficiaire }}">
+                                    </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <div class="clearfix"></div>
+                    <div class="form-group">
+                        <div id="div_types">
+
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+
+                <div class="form-group col-md-12">
+                        <label class="" for="name">
+                            {{ nameBooker }}{#{{ vocab.deux_points }}#}
+                        </label>
+                        <input id="name" class="form-control" name="name" size="80" value="{{ breveDescription }}" />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="" for="description">
+                            {{ vocab.fulldescription }}
+                        </label>
+
+                        <textarea name="description" class="form-control" rows="4" cols="82">{{ description }}</textarea>
+                    </div>
+
+                    {% if capacity > 0 %}
+                        <div class="clearfix"></div>
+                        <div class="col-md-12">
+                            <label >Capacité : {{ capacity }} personnes<span id="capacity" style="display: none;">{{ capacity }}</span>, salle : {{ roomName }}<span id="capacityText"></span></label>
+                        </div>
+                    {% endif %}
+
+                    <div class="clearfix"></div>
+                    <div class="form-group  col-md-12">
+
+                        <div id="div_champs_add">
+                        </div>
+
+                    </div>
+                                <div class="clearfix"></div>
+                    {#<div class="form-group">
+                        <label class="">
+                            {{ vocab.status_clef }}{{ vocab.deux_points }} </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="">{{ vocab.msg_clef }}</label>
+                        <input name="keys" type="checkbox" value="y" {% if clef %}checked{% endif %}>
+                    </div>#}
+
+                    {#{% if settings.showCourrier != 'n' %}
+                        <div class="form-group">
+                            <label class="">
+                                {{ vocab.status_courrier }}{{ vocab.deux_points }}
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="">
+                                {{ vocab.msg_courrier }}
+                            </label>
+                            <input name="courrier" type="checkbox" value="y"  {% if courrier %}checked{% endif %}>
+                        </div>
+                    {% endif %}#}
+
+
+                    <div class="form-group">
+                        <label class="col-md-3">
+                            {{ vocab.date }}{{ vocab.deux_points }}
+                        </label>
+
+                        {{ rawSelectDate|raw }}
+                        <input type="hidden" disabled="disabled" id="mydate_{{ typeDate }}">
+                        <script>
+                            $(function() {
+                                $.datepicker.setDefaults( $.datepicker.regional['fr'] );
+                                $('#mydate_{{ typeDate }}').datepicker({
+                                    beforeShow: readSelected, onSelect: updateSelected,
+                                    showOn: 'both', buttonImageOnly: true, buttonImage: 'images/calendar.png',buttonText: "Choisir la date"});
+                                function readSelected()
+                                {
+                                    $('#mydate_{{ typeDate }}').val( $('#{{ typeDate }}_day').val() + '\\' + $('#{{ typeDate }}_month').val() + '\\' + $('#{{ typeDate }}_year').val() );
+                                    return {};
+                                }
+                                function updateSelected(date)
+                                {
+                                    $('#{{ typeDate }}_day').val(date.substring(0, 2));
+                                    $('#{{ typeDate }}_month').val(date.substring(3, 5));
+                                    $('#{{ typeDate }}_year').val(date.substring(6, 10));
+                                    $('#end_day').val(date.substring(0, 2));
+                                    $('#end_month').val(date.substring(3, 5));
+                                    $('#end_year').val(date.substring(6, 10));
+                                }
+                            });
+                        </script>
+                    </div>
+                    <div class="form-group">
+                        {% if enablePeriod %}
+                            <b>{{ vocab.period }}</b>
+
+                            <select name="period">
+                                {% for p_num, p_val in periods %}
+                                    <option value="{{ p_num }}" {% if period == p_num or p_num == periodStartMin %}selected="selected"{% endif %} {{ p_val }} </option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+
+                                <label class="col-md-2">{{ vocab.time }}</label>
+                                {#{{ dump(timePicker) }}#}
+
+                                {{ include('helpers/timePicker.html.twig', timePicker) }}
+
+                                {% if format24h %}
+                                    <input name="ampm" type="radio" value="am" {% if ampm == 'am' %}checked{% endif %} />{{ amTime }}
+                                    <input name="ampm" type="radio" value="pm" {% if ampm == 'pm' %}checked{% endif %} />{{ pmTime }}
+                                {% endif %}
+
+                        {% endif %}
+                    </div>
+
+                    <div class="clearfix"></div>
+
+
+                    {% if typeAffichageReser == 0 %}
+                        <div class="form-group">
+                            <label class="">{{ vocab.duration }}</label>
+
+                            {{ include('helpers/spinner.html.twig', spinner) }}
+                            <select class="form-control" name="dur_units" size="1">
+                                {% for unit in units %}
+                                    <option value="{{ unit }}" {% if durUnits == vocab.unit %}selected="selected"{% endif %}>{{ unit }}</option>
+                                {% endfor %}
+                            </select>
+                            <input name="all_day" type="checkbox" value="yes" />{{ vocab.all_day }}
+                            {% if enablePeriod %}( {{ morningStarts }} H - {{ afFinJour }} ){% endif %}
+                        </div>
+
+                    {% else %}
+                        <div class="form-group">
+                            <label class="col-md-3">
+                                {{ vocab.fin_reservation }}{{ vocab.deux_points }}
+                            </label>
+
+                            {#<span class="hide">#}
+                                {{ rawSelectDateEnd|raw }}
+                                <input type="hidden" disabled="disabled" id="mydate_end">
+                                <script>
+                                    $(function() {
+                                        $.datepicker.setDefaults( $.datepicker.regional['fr'] );
+                                        $('#mydate_end').datepicker({
+                                            beforeShow: readSelected, onSelect: updateSelected,
+                                            showOn: 'both', buttonImageOnly: true, buttonImage: 'images/calendar.png',buttonText: "Choisir la date"});
+                                        function readSelected()
+                                        {
+                                            $('#mydate_end').val( $('#end_day').val() + '\\' + $('#end_month').val() + '\\' + $('#end_year').val() );
+                                            return {};
+                                        }
+                                        function updateSelected(date)
+                                        {
+                                            $('#end_day').val(date.substring(0, 2));
+                                            $('#end_month').val(date.substring(3, 5));
+                                            $('#end_year').val(date.substring(6, 10));
+                                            $('#start_day').val(date.substring(0, 2));
+                                            $('#start_month').val(date.substring(3, 5));
+                                            $('#start_year').val(date.substring(6, 10));
+                                        }
+                                    });
+                                </script>
+                            {#</span>#}
+                        </div>
+                        <div class="form-group">
+                            {% if enablePeriod %}
+                                <label class="">{{ vocab.period }}</label>
+
+                                <select class="form-control" name="end_period">
+                                    {% for p_num, p_val in periods %}
+                                        <option value="{{ p_num }}" {% if endPeriod == p_num or (p_num + 1) == endMin %}selected="selected"{% endif %} {{ p_val }} </option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+
+                                <label class="col-md-2">{{ vocab.time }}</label>
+                                {#{{ dump(timePickerEnd) }}#}
+                                {{ include('helpers/timePicker.html.twig', timePickerEnd) }}
+                                {% if format24h %}
+                                    <input name="ampm" type="radio" value="am" {% if ampm == 'am' %}checked{% endif %} />{{ amTime }}
+                                    <input name="ampm" type="radio" value="pm" {% if ampm == 'pm' %}checked{% endif %} />{{ pmTime }}
+                                {% endif %}
+
+                            {% endif %}
+                        </div>
+
+                    {% endif %}
+
+                    {% if delaisEtModifOk %}
+                        <div class="form-group">
+                            <div class="alert alert-danger" role="alert">
+                                {{ vocab.reservation_a_confirmer_au_plus_tard_le }}
+                            </div>
+                            {% if modifiable %}
+                                <select class="form-control" name="option_reservation" size="1">
+                                    <option value = "-1">{{ vocab.Reservation_confirmee }}</option>
+                                    {% if selected and optionReservation != -1 %}
+                                        <option value = "{{ optionReservation }}" selected="selected">{{ selectedNo }}</option>
+                                    {% endif %}
+                                    {% for option in optionResa %}
+                                        <option value = "{{ option.dateCourante }}{% if option.dateCourante == optionReservation %}selected="selected"{% endif %}>{{ option.affDateCourante }}</option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <input type="hidden" name="option_reservation" value="{{ optionReservation }}" />
+                                <label>{{ selectedNo }}</label>
+
+
+                                <input type="checkbox" name="confirm_reservation" value="y" />{{ vocab.confirmer_reservation }}
+                            {% endif %}
+                            <br />
+                            <div class="alert alert-danger" role="alert">{{ vocab.avertissement_reservation_a_confirmer }}</br></div>
+                        </div>
+
+                    {% endif %}
+
+                    {#{% if nbAreas > 1 %}
+                        <div class="form-group">
+                            <label for="areas">{{ vocab.match_area }}{{ vocab.deux_points }}</label>
+                            <select class="form-control" id="areas" name="areas" onchange="changeRooms(this.form);insertChampsAdd();insertTypes()" >
+                                {% for area in areasAuth %}
+                                    <option {% if area.selected %}selected="selected"{% endif %} value="{{ area.0 }}">{{ area.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}#}
+
+
+                    {#<tr {% if nbAreas == 1 %}style="display:none"{% endif %}>
+                        <td class="E">
+                            <b>{{ vocab.match_area }}{{ vocab.deux_points }}</b>
+                        </td>
+                    </tr>#}
+                    {#<tr {% if nbAreas == 1 %}style="display:none"{% endif %}>
+                        <td class="CL" style="vertical-align:top;" >
+                            <div class="col-xs-3">
+                                <select class="form-control" id="areas" name="areas" onchange="changeRooms(this.form);insertChampsAdd();insertTypes()" >
+                                    {% for area in areasAuth %}
+                                        <option {% if area.selected %}selected="selected"{% endif %} value="{{ area.0 }}">{{ area.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </td>
+                    </tr>#}
+                    <!-- ************* Ressources edition ***************** -->
+                    <div class="form-group">
+                        {#{{ dump(rooms) }}#}
+                        <label for="rooms" class="col-md-4">
+                            {{ vocab.rooms }}{{ vocab.deux_points }}
+                            {#<br>
+                            <span class="text-info"> {{ vocab.ctrl_click }}</span>#}
+                        </label>
+                        <select id="rooms" name="rooms[]" size="{#{{ longueurListeRessourcesMax }}#}{{ rooms|length }}" multiple="multiple" class="col-md-5">
+                            {% for room in rooms %}
+                                <option {% if room.selected %}selected="selected"{% endif %} value="{{ room.0 }}" title="{{ room.desc }}">{{ room.1 }} {% if room.capacity > 1 %}(capacité: {{ room.capacity }} pers.) {% endif %}</option>
+                            {% endfor %}
+                        </select>
+
+
+                        {#<div class="text-info ">{{ vocab.ctrl_click }}</div>#}
+                    </div>
+
+                    <script type="text/javascript" >
+                        insertChampsAdd();
+                        insertTypes();
+                        insertProfilBeneficiaire();
+                    </script>
+                    {#{% if afficheMessAsterisque %}{{ afficheMessAsterisque }}{% endif %}#}
+
+                    <div class="clearfix"></div>
+                    <!-- ************* Periodic edition ***************** -->
+                    {% if showPeriodicite %}
+                        <div class="col-md-12" style="background-color: rgba(61, 135, 201, 0.18)">
+                            <div class="col-md-12" id="ouvrir" align="center">
+                                            <span class="btn btn-primary">
+                                                <b><a class="whiteNoUnderline" href="javascript:clicMenu(1);check_5()">{{ vocab.click_here_for_series_open|raw }}</a></b>
+                                            </span>
+                            </div>
+
+
+                            <div class="col-md-12" style="display:none; " id="fermer" align="center">
+                                            <span class="btn btn-primary">
+                                                <b><a class="whiteNoUnderline" href="javascript:clicMenu(1);check_5()">{{ vocab.click_here_for_series_close|raw }}</a></b>
+                                            </span>
+                            </div>
+
+
+
+                            <div class="form-group col-md-10" id="menu1" style="display:none;">
+
+                                    <label>
+                                        <b>{{ vocab.rep_type }}</b>
+                                    </label>
+
+
+                                    {#<pre>
+                                        {{ dump(repetitions) }}
+                                    </pre>#}
+
+                                            {% for key, repetition in repetitions %}
+                                                    <div class="form-group">
+                                                        <input name="rep_type" type="radio" value="{{ key }}" {% if repetition.checked %}checked="checked"{% endif %} onclick="check_1()" />{{ repetition.vocab }}
+                                                        {% if repetition.type == 2 %}
+                                                            <select class="form-control" name="rep_num_weeks" size="1" onfocus="check_2()" onclick="check_2()">
+                                                                <option value="1" >{{ vocab.every_week }}</option>
+                                                                {% for keyWeek, week in repetition.weeks %}
+                                                                    <option value="{{ keyWeek }}" {% if week.selected %}selected="selected"{% endif %}>{{ week.vocab }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        {% elseif repetition.type == 3 %}
+                                                            <select class="form-control" name="rep_month" size="1" onfocus="check_3()" onclick="check_3()">
+                                                                <option value="3" {% if repetition.selected == 3 %}selected="selected"{% endif %}>{{ vocab.rep_type_3 }}</option>
+                                                                <option value="5" {% if repetition.selected == 5 %}selected="selected"{% endif %} >{{ vocab.rep_type_3 }}</option>
+                                                            </select>
+                                                        {% elseif repetition.type == 7 %}
+                                                            <select class="form-control" name="rep_month_abs1" size="1" onfocus="check_7()" onclick="check_7()">
+                                                                {% for keyWeek7, week7 in repetition.weeks7 %}
+                                                                    <option value="{{ keyWeek7 }}" >{{ week7.vocab }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                            <select class="form-control" name="rep_month_abs2" size="1" onfocus="check_8()" onclick="check_8()">
+                                                                {% for keyWeekDayName, weekDayName in repetition.weeksDayName %}
+                                                                    <option value="{{ keyWeekDayName }}" >{{ weekDayName.vocab }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                            {{ vocab.ofmonth }}
+                                                        {% endif %}
+                                                  </div>
+
+                                            {% endfor %}
+
+                                        <!-- ***** Fin de périodidité ***** -->
+                                    <label>
+                                        <b>{{ vocab.rep_end_date }}</b>
+                                    </label>
+
+
+                                    <div class="form-group">
+                                        {{ rawDatePickerRepEnd|raw }}
+                                    </div>
+
+                            </div>
+                            <div style="display:none" id="menu2" class="col-md-10 form-group">
+
+                                    <label>
+                                        <b>{{ vocab.rep_rep_day }}</b>
+                                    </label>
+
+
+                                    <div class="form-group">
+                                        {% for keyRepDay, repDay in repDays %}
+                                            <input name="rep_day[{{ repDay.wday }}]" type="checkbox" {% if repDay.checked %}checked="checked"{% endif %} onclick="check_1()" />{{ repDay.vocab }}
+                                        {% endfor %}
+                                    </div>
+
+                            </div>
+                            <div style="display:none" id="menuP" class="form-group col-md-10">
+
+                                    <label>
+                                        <b>Jours/Cycle</b>
+                                    </label>
+
+                                    <div class="form-group">
+                                        {% for keyRepRadioJour, repRadioJour in repRadioJours %}
+                                            <input type="radio" name="rep_jour_" value="{{ keyRepRadioJour }}" {% if repRadioJour.checked %}checked="checked"{% endif %} onclick="check_1()" />{{ vocab.rep_type_6 }} {{ keyRepRadioJour }}
+                                        {% endfor %}
+                                    </div>
+
+                            </div>
+                        </div>
+                    {% else %}
+
+                                <h4 class="E">
+                                    <b>{{ vocab.periodicite_associe }}{{ vocab.deux_points }}</b>
+                                </h4>
+
+                                <div class="form-group">
+                                    <b>{{ vocab.rep_type }}</b>{{ pasPeriodique.vocab }}
+                                </div>
+
+                            {% if pasPeriode.opt != false %}
+
+                                    <div class="form-group">
+                                        <b>{% if pasPeriode.nb == 1 %}{{ vocab.rep_rep_day }}{% else %}{{ vocab.rep_rep_days }}{% endif %}</b>
+                                        {{ pasPeriode.opt }}
+                                    </div>
+
+                            {% endif %}
+
+                                <h4 class="E">
+                                    <b>{{ vocab.date }}{{ vocab.deux_points }}</b>{{ pasPeriode.startDate }}
+                                </h4>
+
+                                <div class="form-group">
+                                    <b>{{ vocab.duration }}</b>{{ pasPeriode.duration }}{{ pasPeriode.dur_units }}
+                                </div>
+                                <div class="form-group">
+                                    <b>{{ vocab.rep_end_date }}</b>{{ pasPeriode.repEndDate }}
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+                <div class="clearfix"></div>
+
+                <div class="form-group">
+                    <div class="col-md-12">
+                        {# todo passer juste les vars avec le mot clef only a include http://twig.sensiolabs.org/doc/tags/include.html #}
+                        {#{{ dump(plugins) }}#}
+                            {# début area plugin #}
+                            {% if plugins != false %}
+                                {# je fais un for, car il peut y avoir plusieurs plugin, chaque plugin doit avoir son FQPN - full qualified plugin - name comme key du tableau  #}
+                                {% for key, plugin in plugins %}
+                                    {# si j'ai un tpl je fais un include #}
+                                    {#{{ dump(plugin) }}#}
+                                    {% if plugin.tpl is defined and plugin.nom is defined and plugin.vars is defined %}
+                                        <!-- Plugin {{ key }} -->
+                                        {% include plugin.nom ~'/views/'~ plugin.tpl ~'.html.twig' with plugin.vars only %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            {# fin area plugin #}
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div id="fixe col-md-12">
+                    <input type="button" class="btn btn-danger col-md-2" value="{{ vocab.cancel }}" onclick="window.location.href='{{ cancelPageLink }}'" />
+                    <input type="button" class="btn btn-success col-md-9 col-md-offset-1" value="{{ vocab.save }}" onclick="Save_entry();validate_and_submit();" />
+                    <input type="hidden" name="rep_id"    value="{{ repId }}" />
+                    <input type="hidden" name="edit_type" value="{{ editType }}" />
+                    <input type="hidden" name="page" value="{{ page }}" />
+                    <input type="hidden" name="room_back" value="{{ roomId }}" />
+                    {% if inputHiddenBeneficiaire %}
+                        <input type="hidden" name="beneficiaire" value="{{ beneficiaire }}" />
+                    {% endif %}
+                    <input type="hidden" name="statut_entry" value="{{ statusEntry }}" />
+                    <input type="hidden" name="create_by" value="{{ createBy }}" />
+                    {% if idForHidden %}
+                        <input type="hidden" name="id" value="{{ idForHidden }}" />
+                    {% endif %}
+                    <input type="hidden" name="type_affichage_reser" value="{{ typeAffichageReser }}" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    insertProfilBeneficiaire();
+    insertChampsAdd();
+    insertTypes()
+</script>
+<script type="text/javascript">
+
+
+
+/*    $('input#addon_1').on('focus', function() {
+        alert('Text1 changed!');
+    });*/
+/*    $('input#addon_1').change(function() {
+        alert('Text1 changed!');
+    });*/
+
+    $('#areas').on('change', function(){
+
+        $('.multiselect').multiselect('destroy');
+        $('.multiselect').multiselect();
+    });
+
+    $(document).ready(function() {
+
+        $('#accordion').hide();
+        //$('#collabseBandeau').collapse('hide');
+
+        $('.multiselect').multiselect();
+        $("#select2").select2();
+
+        $('#rooms').multiselect({
+            nonSelectedText: 'Veuillez sélectionner une ou plusieurs salles'
+        });
+
+    });
+$(document).on("change","#addon_1",function(){
+    //console.log("test change");
+    var nbPax = $('input#addon_1').val();
+    var capacity = $('span#capacity').text();
+    if (nbPax > capacity) {
+        $('input#addon_1').parent().addClass("has-error");
+        $('span#capacityText').addClass('bg-danger').text("  Attention ! Capacité de la salle dépassée !");
+
+    } else {
+        $('input#addon_1').parent().removeClass("has-error");
+        $('span#capacityText').addClass('bg-danger').text("");
+    }
+
+});
+
+</script>
+<script type="text/javascript" >
+    /*document.getElementById('main').name.focus();*/
+
+    {% if cookie %}check_4();{% endif %}
+    {% if idNotVideEtPeriodicite %}clicMenu('1'); check_5();{% endif %}
+    {% if err %}timeoutID = window.setTimeout("Load_entry();check_5();",500){% endif %}
+</script>
+
+
+<br>
+<br>
+<br>
+<br>
+{#{{ include('footer.html.twig') }}#}
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

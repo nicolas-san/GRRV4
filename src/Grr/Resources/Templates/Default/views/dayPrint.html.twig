@@ -1,0 +1,306 @@
+{% if pview and precedant %}
+    <span id="lienPrecedent">
+        <button class="btn btn-default btn-xs" onclick="charger();javascript:history.back();">Précedent</button>
+    </span>
+{% endif %}
+{% if roomForArea %}
+{#<div class="row">#}
+    {% if tplArrayMenuGauche %}
+        {# include de template du menu gauche #}
+        {{ include('menuGauche.html.twig', tplArrayMenuGauche) }}
+    {% endif %}
+</div>
+</div>
+</div>
+
+        <div class="container-fluid">
+            <div id="planning" class="row">
+
+    {#<div class="row">#}
+                    <div id="chargement" style="display: none;">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                        </div>
+                    </div>
+                <div class="titre_planning row">
+
+                                <div class="col-md-12">
+                                    <h4 class="titre text-capitalize text-center">{{ thisAreaName }} - {{ vocab.all_rooms }} </h4>
+                                     <h5 class="text-capitalize  text-center">Le {{ dateDuJour }}</h5>
+                                </div>
+
+                </div>
+                </div>
+                {#<div class="row">#}
+                    <div class="contenu_planning row-fluid">
+                        <table class="table-bordered table-striped col-md-12">
+                            <thead>
+                                <tr>
+                                    <th class="jour_sem"> </th>
+                                    {% set jourEnCours = "" %}
+                                    {% for jour in jours if numDay == jour.numDay %}
+                                        {% set jourEnCours = jour %}
+                                        {# modification pour n'afficher que le jour en cours todo. refacto pour n'envoyer que le jour necessaire #}
+                                        {# un tour par jour de la semaine cette boucle doit faire 7 tours #}
+                                        {#<th class="jour_sem">#}
+                                            {#<a class="lienPlanning {% if jour.vacances %}vacance{% endif %} {% if jour.ferie %}ferie{% endif %}" href="{{ jour.linkHref }}" title="{{ jour.linkTitle }}">{{ jour.linkText }}</a>#}
+                                            {#<br>#}
+                                            {#{% if jour.jourCycleActif %}
+                                                {% if jour.jourCycleActifFirst %} {{ vocab.rep_type_6 }} {% endif %} {{ jour.jourCycle }}
+                                            {% endif %}#}
+                                            {# les creneaux #}
+                                            {#{{ dump(jour.creneauxHoraire) }}#}
+                                            {#<table>
+                                                <tr>#}
+                                                    {% for creneau in jour.creneauxHoraire %}
+                                                        <th class="{% if loop.index0 is odd %}cellHours{% else %}cellHours2{% endif %} paddingSides3px">
+                                                            <span class="creneau">{% if creneau.periodeNameOrHeure is iterable  %}{{ creneau.periodeNameOrHeure.start }}<br>{{ creneau.periodeNameOrHeure.end }}{% else %}{{ creneau.periodeNameOrHeure }}{% endif %}</span>
+                                                        </th>
+                                                    {% endfor %}
+                                                {#</tr>
+                                            </table>#}
+                                        {#</th>#}
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            {# boucle des rooms accessibles #}
+                            {% for room in rooms %}
+                               {# <pre>
+                                {{ dump(room) }}
+                                </pre>#}
+                                <tr>
+                                    <td>
+                                        <a class="roomTitle" title="{% if room.description != "" %}{{ room.description }}{% endif %}{% if room.capacity > 0 %} - Capacité : {{ room.capacity }}{% endif %}" href="{{ room.linkHref }}" href="{{ room.linkHref }}">{{ room.linkText }}</a>
+                                        <br />
+                                        {%  if room.resaIndispo %}
+                                            <span class="texte_ress_tempo_indispo">{{ vocab.ressource_temporairement_indisponible }}</span>
+                                            <br />
+                                        {% endif %}
+
+                                        {% if room.accessToFiche %}
+                                            <a href="javascript:centrerpopup('view_room.php?id_room={{ room.id }}',600,480,'scrollbars=yes,statusbar=no,resizable=yes')" title="{{ vocab.fiche_ressource }}">
+                                            <span class="glyphcolor glyphicon glyphicon-search"></span></a>
+                                        {% endif %}
+
+                                        {% if room.adminAccess %}
+                                            <a href="./admin/admin_edit_room.php?room={{ room.id }}"><span class="glyphcolor glyphicon glyphicon-cog"></span></a>
+                                        {% endif %}
+                                        {% if room.afficheRessourceEmprunte != 'yes' and room.afficheRessourceEmprunte is iterable %}
+                                            {{ include('helpers/ressourceEmpruntee.html.twig', room.afficheRessourceEmprunte) }}
+                                        {% endif %}
+                                    </td>
+                                    {% set firstPassage = true %}
+                                    {% set prevColspan = 0 %}
+                                    {% set jumpCol = 0 %}
+                                    {% set pasCol = false %}
+                                    {% set pasDeResaDansLeCreneau = true %}
+
+                                    {% for jour in room.jours if numDay == jour.numDay %}
+                                        {% set jourInPast = jour.past %}
+                                        {% for tCreneau, creneau in jourEnCours.creneauxHoraire %}
+                                        {# {{ dump(loop.index0) }}#}
+
+                                            {% set firstPassage = true %}
+                                            {% set pasDeResaDansLeCreneau = true %}
+                                                {# un tour de boucle par créneau #}
+
+
+                                                {% if jumpCol == 0 %}
+                                                    <td  align="center" id="{{ tCreneau }}" width="5%"
+                                                    {% set pasCol = false %}
+                                                {% else %}
+                                                    {% set jumpCol = jumpCol - 1 %}
+                                                    {% set pasCol = true %}
+                                                {% endif %}
+
+                                                    {% for reservation in jour.reservations %}
+
+                                                            {% if reservation.tStart == creneau.tCreneauStart %}
+                                                                {% set pasDeResaDansLeCreneau = false %}
+                                                                {#{{ jumpCol }}{{ dump(firstPassage) }}
+
+                                                                {% if firstPassage  %}
+                                                                    {% set firstPassage = false %}
+                                                                {% endif %}#}
+                                                                bgcolor="{{ reservation.color }}" class="{{ reservation.color|trim('#') }}"
+                                                                {% if firstPassage and pasCol == false %}
+                                                                   colspan="{{ reservation.nbCreneaux }}">
+                                                                {% endif %}
+                                                                {% if firstPassage %}
+                                                                    {% set firstPassage = false %}
+                                                                {% endif %}
+                                                                {#{{ jumpCol }}{{ dump(firstPassage) }}#}
+                                                                {#{{ reservation.nbCreneaux }}#}
+                                                                {% set jumpCol = reservation.nbCreneaux - 1 %}
+                                                                {#{{ jumpCol }}#}
+                                                                  {# <br>passage dans resa creneau ok Colspan = {{ reservation.nbCreneaux }} PREV ={{  prevColspan}}<br>#}
+
+                                                                {#{{ dump(reservation.nbCreneaux) }}#}
+
+
+                                                                {#<br>debut de résa<br>#}
+                                                                    {#if reservation.tStart == creneau.tStart #}
+                                                                    {# un tour de boucle par résa dans le jour en cours #}
+                                                                    {#<br>reservation tStart {{ reservation.tStart }}<br>
+                                                                    <br>creneau tStart {{ tCreneau }}<br>#}
+
+
+                                                                    <style>
+                                                                        @media print{
+                                                                              td.{{ reservation.color|trim('#') }} {background-color:{{ reservation.color }} !important;
+                                                                            }}
+                                                                    </style>
+
+                                                                                    <div class="col-md-12" style="background-color: {{ reservation.color }};">
+                                                                                        {% if reservation.empruntee %}
+                                                                                            <img src="img_grr/buzy.png" alt="{{ vocab.ressource_actuellement_empruntee }}" title="{{ vocab.ressource_actuellement_empruntee }}" width="20" height="20" class="image" />
+                                                                                        {% endif %}
+
+                                                                                        {% if reservation.aConfirmerAuPlusTard != false %}
+                                                                                            <img src="img_grr/small_flag.png" alt="{{ vocab.reservation_a_confirmer_au_plus_tard_le }}" title="{{ vocab.reservation_a_confirmer_au_plus_tard_le }}, {{ reservation.aConfirmerAuPlusTard }}" width="20" height="20" class="image" />
+                                                                                        {% endif %}
+
+                                                                                        {% if reservation.moderation %}
+                                                                                            <img src="img_grr/flag_moderation.png" alt="{{ vocab.en_attente_moderation }}" title="{{ vocab.en_attente_moderation }}" class="image" />
+                                                                                        {% endif %}
+
+                                                                                        <span class="small_planning">{#{{ reservation.data }}#}
+                                                                                                {% if reservation.plugins.kzdRestauration.status is defined and reservation.plugins.kzdRestauration.status %}
+                                                                                                    <span class="glyphicon glyphicon-cutlery"></span><br>
+                                                                                                {% endif %}
+                                                                                                {% if reservation.repeat != false %}
+                                                                                                    {{ reservation.repeat }}
+                                                                                                {% endif %}
+                                                                                                <br>{{ reservation.who1 }} - {{ reservation.whoDeBase }}
+                                                                                                <br>
+
+                                                                                                {% if reservation.description != false %}
+                                                                                                    <i> {{ reservation.description|raw }} </i>
+                                                                                                {% endif %}
+
+                                                                                                {% if reservation.clef %}
+                                                                                                    <br><img src="img_grr/skey.png" alt="clef">
+                                                                                                {% endif %}
+
+                                                                                                {% if reservation.courrier != false %}
+                                                                                                    {% if reservation.courrier == "courrier" %}
+                                                                                                        <br><img src="img_grr/scourrier.png" alt="courrier">
+                                                                                                    {% elseif reservation.courrier == "buzy" %}
+                                                                                                        <br><img src="img_grr/hourglass.png" alt="buzy">
+                                                                                                    {% endif %}
+                                                                                                {% endif %}
+                                                                                            </span>
+                                                                                    </div>
+
+                                                                {#{% elseif reservation.tEnd == creneau.tCreneauTend %}#}
+
+                                                            {% else %}
+
+                                                                {#{% if firstPassage and pasCol == false %}
+
+                                                                     >
+
+                                                                    {% set firstPassage = false %}
+
+                                                                {% endif %}#}
+
+                                                                    {#>
+                                                                    {% if resaIndispo == false %}
+                                                                    <a href="{{ room.linkToResa }}&hour={{ creneau.heure }}&minute={{ creneau.minute }}" title="{{ vocab.cliquez_pour_effectuer_une_reservation }}">
+                                                                        <span class="glyphicon glyphicon-plus" style="font-size: 1.5em;"></span>
+                                                                    </a>
+
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                                </td>#}
+                                                            {% endif %}
+                                                    {% endfor %}
+
+                                                    {% if pasDeResaDansLeCreneau and pasCol == false %}
+                                                        >
+                                                        {% if resaIndispo == false and jour.past == false %}
+                                                            {# ici faire un check si la date de la résa est dans le passé, on n'affiche pas #}
+                                                            <a href="{{ room.linkToResa }}&hour={{ creneau.heure }}&minute={{ creneau.minute }}" title="{{ vocab.cliquez_pour_effectuer_une_reservation }}">
+                                                                <span class="glyphicon glyphicon-option-horizontal"></span>
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                        {# dans tous les cas j'ajoute le + #}
+                                                        {#{{ dump(jumpCol) }}#}
+                                                    {% if prevColspan < 2 and pasCol == false %}
+                                                        {#{% if resaIndispo == false %}
+                                                            <a href="{{ room.linkToResa }}&hour={{ creneau.heure }}&minute={{ creneau.minute }}" title="{{ vocab.cliquez_pour_effectuer_une_reservation }}">
+                                                                <span class="glyphicon glyphicon-plus" style="font-size: 1.5em;"></span>
+                                                            </a>
+                                                        {% endif %}#}
+                                                        </td>
+                                                    {% endif %}
+
+                                        {% endfor %}
+                                                {#</tr></table>#}
+
+                                            {% if jour.horsResa %}
+                                                <br><img src="img_grr/stop.png" alt="{{ vocab.reservation_impossible }}" title="{{ vocab.reservation_impossible }}" width="16" height="16" class="{% if pview %}print_image{% else %}image{% endif %}" />
+                                            {% else %}
+                                                {#{% if jour.editEntryLink != false %}
+                                                    <a class="col-md-offset-6" href="{{ jour.editEntryLink }}" title="{{ vocab.cliquez_pour_effectuer_une_reservation }}">
+                                                        <span class="glyphicon glyphicon-plus" style="font-size: 1.5em;"></span>
+                                                    </a>
+                                                {% endif %}#}
+                                            {% endif %}
+                                            </td>
+
+                                            <script language=javascript>
+
+                                                jQuery(document).ready(function($){
+                                                    $("#popup_name").draggable({containment: "#container"});
+                                                        $("#popup_name").resizable(
+                                                        {
+                                                            animate: true
+                                                        }
+                                                    );
+                                                });
+                                            </script>
+                                            {#  fin d'un jour #}
+                                    {% else %}
+                                            {# si le room est vide #}
+                                        {% for tCreneau, creneau in jourEnCours.creneauxHoraire %}
+                                            <td width="5%" align="center">
+                                            {#<pre>{{ dump(creneau) }}</pre>#}
+                                                {% if jourEnCours.past == false %}
+                                                    <a href="{{ room.linkToResa }}&hour={{ creneau.heure }}&minute={{ creneau.minute }}" title="{{ vocab.cliquez_pour_effectuer_une_reservation }}">
+                                                                    <span class="glyphicon glyphicon-option-horizontal"></span>
+                                                    </a>
+                                                {% endif %}
+                                            </td>
+                                        {% endfor %}
+                                    {% endfor %}
+                                        </tr>
+                            {% endfor %}
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {#</div>#}
+    {#</div>#}
+
+
+<div id="popup_name" class="popup_block"></div>
+
+
+{% else %}
+    <h1>{{ vocab.no_rooms_for_area }}</h1>
+{% endif %}
+<br>
+
+</body>
+</html>
+
+
+
+
+
+
