@@ -2741,13 +2741,16 @@ function send_mail($id_entry, $action, $dformat, $tab_id_moderes = array())
             $message .= $moderate_description." \n----";
         }
         $message .= "\n".$vocab['voir_details'].$vocab['deux_points']."\n";
-        if (count($tab_id_moderes) == 0) {
+                /* just one link to day view, to avoid direct ugly access to view_entry */
+        $message .= "\n".traite_grr_url('', 'y').'week.php?year='.$startYear.'&month='.$startMonth.'&day='.$startDay.'&room='.$room_id;
+/*        if (count($tab_id_moderes) == 0) {
             $message .= "\n".traite_grr_url('', 'y').'view_entry.php?id='.$id_entry;
         } else {
             foreach ($tab_id_moderes as $id_moderes) {
                 $message .= "\n".traite_grr_url('', 'y').'view_entry.php?id='.$id_moderes;
             }
-        }
+        }*/
+
         $message .= "\n\n".$vocab['rappel_de_la_demande'].$vocab['deux_points']."\n";
     } elseif ($action == 7) {
         $sujet .= $vocab['subject_mail_retard'];

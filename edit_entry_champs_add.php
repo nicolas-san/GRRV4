@@ -131,7 +131,7 @@ foreach ($overload_fields as $fieldname => $fieldtype) {
 
     } else {
 
-        echo '<tr><td><div class="col-xs-12"><select class="form-control" name="addon_'.$overload_fields[$fieldname]['id']."\" size=\"1\">\n";
+        echo '<tr><td><div class="col-xs-12"><select class="form-control" name="addon_'.$overload_fields[$fieldname]['id'].'"  id="addon_'.$overload_fields[$fieldname]['id'].'"  size="1">';
         if ($overload_fields[$fieldname]['obligatoire'] == 'y') {
             echo '<option value="">'.get_vocab('choose').'</option>';
         }
