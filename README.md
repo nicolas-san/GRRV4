@@ -6,6 +6,7 @@ GRR
 - cloner le repos
 - lancer un ./composer.phar install
 - visiter la homepage pour lancer l'install
+- il faut immédiatement après l'install aller dans l'admin et configurer un domaine et une ressource
 
 ** Notes sur la version 4 **
  - la version 4 est une version de transition, le front est géré avec Twig, et les nouveaux vendors sont gérés avec composer.
