@@ -44,6 +44,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+/mysql_changes.sql
 include/connect.inc.php
 vendor
 /composer.lock

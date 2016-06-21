@@ -45,7 +45,7 @@ CREATE TABLE grr_correspondance_statut (id int(11) NOT NULL auto_increment, code
 INSERT INTO grr_setting VALUES ('sessionMaxLength', '30');
 INSERT INTO grr_setting VALUES ('automatic_mail', 'yes');
 INSERT INTO grr_utilisateurs VALUES ('ADMINISTRATEUR', 'Administrateur', 'grr', 'ab4f63f9ac65152575886860dde480a1', 'admin@labas.fr', 'administrateur', 'actif', 0, 0, 0, '', '', '','local');
-INSERT INTO grr_setting VALUES ('company', 'Nom de l\'établissement');
+INSERT INTO grr_setting VALUES ('company', 'Nom de l\'ï¿½tablissement');
 INSERT INTO grr_setting VALUES ('webmaster_name', 'Webmestre de GRR');
 INSERT INTO grr_setting VALUES ('webmaster_email', 'admin@mon.site.fr');
 INSERT INTO grr_setting VALUES ('technical_support_email', 'support.technique@mon.site.fr');
@@ -53,8 +53,8 @@ INSERT INTO grr_setting VALUES ('grr_url', 'http://mon.site.fr/grr/');
 INSERT INTO grr_setting VALUES ('disable_login', 'no');
 INSERT INTO grr_setting VALUES ('begin_bookings', '1251763200');
 INSERT INTO grr_setting VALUES ('end_bookings', '1472688000');
-INSERT INTO grr_setting VALUES ('title_home_page', 'Gestion et Réservation de Ressources');
-INSERT INTO grr_setting VALUES ('message_home_page', 'En raison du caractère personnel du contenu, ce site est soumis à des restrictions utilisateurs. Pour accéder aux outils de réservation, identifiez-vous :');
+INSERT INTO grr_setting VALUES ('title_home_page', 'Gestion et Rï¿½servation de Ressources');
+INSERT INTO grr_setting VALUES ('message_home_page', 'En raison du caractï¿½re personnel du contenu, ce site est soumis ï¿½ des restrictions utilisateurs. Pour accï¿½der aux outils de rï¿½servation, identifiez-vous :');
 INSERT INTO grr_setting VALUES ('version', '3.0.0');
 INSERT INTO grr_setting VALUES ('versionRC', '1');
 INSERT INTO grr_setting VALUES ('default_language', 'fr');
@@ -84,7 +84,7 @@ INSERT INTO grr_setting VALUES ('jours_cycles_actif', 'Non');
 INSERT INTO grr_setting VALUES ('area_list_format', 'item');
 INSERT INTO grr_setting VALUES ('longueur_liste_ressources_max', '20');
 INSERT INTO grr_type_area VALUES (1, 'Cours', 1, 1, 'A', 2);
-INSERT INTO grr_type_area VALUES (2, 'Réunion', 2, 2, 'B', 2);
+INSERT INTO grr_type_area VALUES (2, 'Rï¿½union', 2, 2, 'B', 2);
 INSERT INTO grr_type_area VALUES (3, 'Stage', 3, 3, 'C', 2);
 INSERT INTO grr_type_area VALUES (4, 'Devoir', 4, 4, 'D', 2);
 INSERT INTO grr_type_area VALUES (5, 'Autre', 5, 5, 'E', 2);
@@ -115,3 +115,6 @@ INSERT INTO grr_setting VALUES ('mail_destinataire', 'test@test.fr');
 INSERT INTO grr_setting VALUES ('mail_etat_destinataire', '0');
 INSERT INTO grr_setting VALUES ('menu_gauche', '1');
 INSERT INTO grr_setting VALUES ('file', '1');
+
+ALTER TABLE `grr_utilisateurs` ADD `tel` VARCHAR( 100 ) NOT NULL ,
+ADD `champs_libre` VARCHAR( 255 ) NOT NULL;
