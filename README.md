@@ -1,6 +1,12 @@
 GRR
 ===================
 
+** Développement arrêté, normalement fonctionnelle mais en gros chantier, cette version pour l'instant est à l'arrêt et cherche éventuellement un dév **
+# Pour la tester :
+- cloner le repos
+- lancer un ./composer.phar install
+- visiter la homepage pour lancer l'install
+
 ** Notes sur la version 4 **
  - la version 4 est une version de transition, le front est géré avec Twig, et les nouveaux vendors sont gérés avec composer.
  - une compatibilité maximale est prévue entre la V3 et la V4, les versions suivantes ne le seront probablement pas
